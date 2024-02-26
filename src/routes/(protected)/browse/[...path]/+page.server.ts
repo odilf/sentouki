@@ -6,9 +6,7 @@ import todo from "ts-todo";
 
 export const load = (async ({
 	params,
-}): Promise<
-	{ type: "dir"; entries: Entry[] } | { type: "file"; filetype: string }
-> => {
+}) => {
 	const paths = getPathsFromParams(params);
 
 	const stats = await lstat(paths.fsPath);
@@ -19,8 +17,12 @@ export const load = (async ({
 		};
 	}
 
+	const filename = paths.paramsPath.at(-1) ?? todo();
+
 	return {
 		type: "file" as const,
-		filetype: getFileType(paths.paramsPath.at(-1) ?? todo(), stats),
+		filename,
+		filetype: getFileType(filename, stats),
+		paramsPath: paths.paramsPath.join("/"),
 	};
 }) satisfies PageServerLoad;
