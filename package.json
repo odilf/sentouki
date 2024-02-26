@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "vite dev",
+        "dev-remote": "vite dev --port 6942 --host",
         "build": "vite build",
         "preview": "vite preview",
         "format": "prettier --write .",
