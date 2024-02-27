@@ -57,7 +57,6 @@ export const actions: Actions = {
     },
 
     logout: async ({ locals, cookies }) => {
-        console.log('Logging out')
         if (!locals.session) {
             return fail(401)
         }

@@ -3,6 +3,8 @@
     import Video from './Video.svelte'
     import ObjectFullScreen from './ObjectFullScreen.svelte'
     import Unknown from './Unknown.svelte'
+    import Code from './Code.svelte'
+    import Markdown from './Markdown.svelte'
 
     /**
      * List of renderers that get mapped to their respective svelte components.
@@ -13,6 +15,8 @@
         image: Image,
         video: Video,
         objectFullScreen: ObjectFullScreen,
+        code: Code,
+        markdown: Markdown,
         unknown: Unknown,
     } as const
 
@@ -27,6 +31,7 @@
         mp4: 'video',
         mov: 'video',
         mkv: 'video',
+        md: 'markdown',
     } as const
 </script>
 
@@ -39,7 +44,7 @@
     $: renderer = filetypeRenderers[filetype.toLowerCase()]
 </script>
 
-<main class="mx-auto min-h-[100dvh] max-w-4xl py-8">
+<main class="mx-auto min-h-[100dvh] max-w-4xl py-8 px-4">
     <h1 class="mb-8 text-4xl font-bold">{filename}</h1>
 
     <svelte:component this={renderers[renderer] ?? Unknown} {serverPath} />

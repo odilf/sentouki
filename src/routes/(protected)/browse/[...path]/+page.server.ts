@@ -1,13 +1,16 @@
 import { lstat } from "node:fs/promises";
 import type { PageServerLoad } from "./$types";
 import { getFileType, getPathsFromParams } from "$lib/fs/path";
-import { getEntriesFromDirectory, type Entry } from "$lib/fs/directory";
+import { getEntriesFromDirectory } from "$lib/fs/directory";
 import todo from "ts-todo";
+import { error } from "@sveltejs/kit";
 
 export const load = (async ({
 	params,
 }) => {
 	const paths = getPathsFromParams(params);
+		try {
+
 
 	const stats = await lstat(paths.fsPath);
 	if (stats.isDirectory()) {
@@ -25,4 +28,8 @@ export const load = (async ({
 		filetype: getFileType(filename, stats),
 		paramsPath: paths.paramsPath.join("/"),
 	};
+		} catch (err) {
+			console.warn(err)
+			throw error(404, `Could not find file (${paths.paramsPath.join("/")})`)
+		}
 }) satisfies PageServerLoad;

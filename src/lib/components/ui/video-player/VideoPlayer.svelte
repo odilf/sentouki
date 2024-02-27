@@ -1,24 +1,9 @@
-<!-- <script lang="ts"> -->
-<!--     import 'vidstack/bundle' -->
-<!-- 	import 'vidstack/icons'; -->
-<!-- </script> -->
-<!---->
-<!-- Media player -->
-<!---->
-<!-- 	<media-icon type="play"></media-icon> -->
-<!---->
-<!-- <media-player -->
-<!--     title="Sprite Fight" -->
-<!--     src="https://stream.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/low.mp4" -->
-<!-- > -->
-<!--     <media-provider playsInLine></media-provider> -->
-<!-- </media-player> -->
-
 <script lang="ts">
     // Import styles.
     import 'vidstack/player/styles/default/theme.css'
     import 'vidstack/player/styles/default/layouts/audio.css'
     import 'vidstack/player/styles/default/layouts/video.css'
+
     // Register elements.
     import 'vidstack/player'
     import 'vidstack/player/layouts'

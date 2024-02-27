@@ -19,7 +19,7 @@
     <div class="mx-auto flex gap-4">
         {#if data.user}
             <Button class="mx-auto w-fit p-6 text-lg">
-                <a href="/browse"> Browse </a>
+                <a href="/browse" data-sveltekit-preload-code="eager"> Browse </a>
             </Button>
 
             <Button class="mx-auto w-fit p-6 text-lg">

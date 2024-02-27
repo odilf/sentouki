@@ -10,7 +10,6 @@ export const GET: RequestHandler = async ({ params, request }) => {
     const { fsPath } = getPathsFromParams(params);
 
     try {
-        console.log(request)
         const stats = await lstat(fsPath);
 
         const rangeHeader = request.headers.get("Range");
