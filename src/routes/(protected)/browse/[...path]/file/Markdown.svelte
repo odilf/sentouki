@@ -32,6 +32,16 @@
     let html = browser ? getHtml(serverPath) : new Promise(() => null)
 </script>
 
+<!--
+    @component
+    
+    Component for rendering markdown. 
+
+    Supported extensions:
+    - Github flavored markdown (GFM)
+    - Code blocks with shiki
+-->
+
 <section class="mx-auto max-w-xl">
     {#await html}
         Loading
