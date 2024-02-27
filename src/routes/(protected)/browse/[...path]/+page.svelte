@@ -1,6 +1,6 @@
 <script lang="ts">
     import Directory from './Directory.svelte'
-    import File from './File.svelte'
+    import File from './file/File.svelte'
 
     export let data
 </script>
