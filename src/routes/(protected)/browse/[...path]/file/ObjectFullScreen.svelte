@@ -1,8 +1,8 @@
 <script lang="ts">
-	export let serverPath: string
+    export let serverPath: string
 </script>
 
-<object title={serverPath} class="w-full h-screen">
-	<param name="src" value={serverPath} />
-	<embed src={serverPath} class="w-full h-full"/>
+<object title={serverPath} class="h-screen w-full">
+    <param name="src" value={serverPath} />
+    <embed src={serverPath} class="h-full w-full" />
 </object>

@@ -8,5 +8,9 @@
 {#if data.type === 'dir'}
     <Directory entries={data.entries} />
 {:else}
-    <File paramsPath={data.paramsPath} filename={data.filename} filetype={data.filetype} />
+    <File
+        paramsPath={data.paramsPath}
+        filename={data.filename}
+        filetype={data.filetype}
+    />
 {/if}

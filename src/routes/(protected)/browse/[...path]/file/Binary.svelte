@@ -11,7 +11,7 @@
 
     // let byteStream: ReadableStream<Uint8Array> | null = null
     let bytes: ArrayBuffer | null = null
-
 </script>
 
-Binary data. UOH File Browser doesn't yet support interesting ways to represent binary data.
+Binary data. UOH File Browser doesn't yet support interesting ways to represent
+binary data.

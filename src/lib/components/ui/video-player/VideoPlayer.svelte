@@ -59,7 +59,7 @@
 <media-player
     class="ring-media-focus aspect-video w-full overflow-hidden rounded-md bg-slate-900 font-sans text-white data-[focus]:ring-4"
     title="Sprite Fight"
-	{src}
+    {src}
     playsinline
     on:provider-change={onProviderChange}
     on:can-play={onCanPlay}
@@ -74,9 +74,8 @@
     </media-provider>
 
     <media-audio-layout />
-    <media-video-layout
-    />
-        <!-- thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt" -->
+    <media-video-layout />
+    <!-- thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt" -->
 </media-player>
 
 <style lang="postcss">
