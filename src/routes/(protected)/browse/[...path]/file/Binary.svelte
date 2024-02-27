@@ -13,9 +13,11 @@
     // let bytes: ArrayBuffer | null = null
 </script>
 
-<Button on:click={() => {
-    getStream(serverPath)
-}}>
+<Button
+    on:click={() => {
+        getStream(serverPath)
+    }}
+>
     Download
 </Button>
 

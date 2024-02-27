@@ -79,7 +79,7 @@ export function getComponent(filetype: string) {
 }
 
 export function getIcon(filetype: string): ComponentType<Icon> {
-    if (filetype === "dir") {
+    if (filetype === 'dir') {
         return FolderIcon
     }
 
