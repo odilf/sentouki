@@ -1,13 +1,17 @@
 <script lang="ts">
-	export let serverPath: string
+    import VideoPlayer from '$lib/components/ui/video-player/VideoPlayer.svelte'
+    export let serverPath: string
 
-	let video: HTMLVideoElement
+    let video: HTMLVideoElement
 </script>
 
 <!-- svelte-ignore a11y-media-has-caption -->
-<video src={serverPath} controls bind:this={video} on:seeked={(e) => {
-	console.log("seeeking", e.timeStamp)
-	video.fastSeek(e.timeStamp)
-}}>
-	
-</video>
+<!-- <video src={serverPath} controls> -->
+<!-- 	 -->
+<!-- </video> -->
+
+<!-- {#await import('$lib/components/ui/video-player/VideoPlayer.svelte') then {default: Player}} -->
+<!--   <svelte:component this={Player} /> -->
+<!-- {/await} -->
+
+<VideoPlayer src={serverPath} />

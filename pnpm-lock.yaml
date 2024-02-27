@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@httpland/range-parser':
+    specifier: ^1.2.0
+    version: 1.2.0
   '@libsql/client':
     specifier: ^0.5.1
     version: 0.5.1
@@ -26,6 +29,9 @@ dependencies:
   lucide-svelte:
     specifier: ^0.335.0
     version: 0.335.0(svelte@4.2.12)
+  media-icons:
+    specifier: ^1.0.0
+    version: 1.0.0
   mode-watcher:
     specifier: ^0.2.1
     version: 0.2.1(svelte@4.2.12)
@@ -47,6 +53,9 @@ dependencies:
   ts-todo:
     specifier: git+https://github.com/Odilf/ts-todo.git#4f5d78e
     version: github.com/Odilf/ts-todo/4f5d78e
+  vidstack:
+    specifier: ^1.10.9
+    version: 1.10.9
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -633,6 +642,13 @@ packages:
     dev: false
     optional: true
 
+  /@httpland/range-parser@1.2.0:
+    resolution: {integrity: sha512-8hOuBe2Jyatrmj060orVaRwU5lh5NPzqk5w8L4hraztr3fqurSY4seILUzt8nxYlwp33skVADoEi95LMuo8WQw==}
+    dependencies:
+      '@miyauci/isx': 1.1.1
+      '@miyauci/prelude': 1.0.0
+    dev: false
+
   /@internationalized/date@3.5.2:
     resolution: {integrity: sha512-vo1yOMUt2hzp63IutEaTUxROdvQg1qlMRsbCvbay2AK2Gai7wIgCyK5weEX3nHkiLgo4qCXHijFNC/ILhlRpOQ==}
     dependencies:
@@ -802,6 +818,14 @@ packages:
       focus-trap: 7.5.4
       nanoid: 5.0.6
       svelte: 4.2.12
+    dev: false
+
+  /@miyauci/isx@1.1.1:
+    resolution: {integrity: sha512-I675QDyEPVM8Ya/Yfr908YxhFMyoht6xysqKmEmkuohheyTs1ZO6mzm6tI/ddKfGNDymatwqiMtqfXjLI0seWg==}
+    dev: false
+
+  /@miyauci/prelude@1.0.0:
+    resolution: {integrity: sha512-jHT170+byyB9G/RWFZ+UgZCVcFAB9+hjnPnK8LZJUbhIgbz3SQXyEmuQIO00mi2FLmCWgHN3rVRFEEcx11woEg==}
     dev: false
 
   /@napi-rs/wasm-runtime@0.1.1:
@@ -2782,6 +2806,16 @@ packages:
   /mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
 
+  /media-captions@1.0.2:
+    resolution: {integrity: sha512-QxAFc+XTGZeMx+ZvLtMxEDgAjd0kr1LJ2NekLr1cw/UKENOxK7B9g6HwtuTQzCXxmb4Dknd4T8M7FOqqCK9buA==}
+    engines: {node: '>=16'}
+    dev: false
+
+  /media-icons@1.0.0:
+    resolution: {integrity: sha512-NpGZOUqNLz5BhvGB1CkB/ejinnsiQQCjwNMrz4X6e9PO5E+am44jo75fnxCdXSVEp445B3U3gSbwYyGR9GQV2w==}
+    engines: {node: '>=16'}
+    dev: false
+
   /memfs-browser@3.5.10302:
     resolution: {integrity: sha512-JJTc/nh3ig05O0gBBGZjTCPOyydaTxNF0uHYBrcc1gHNnO+KIHIvo0Y1FKCJsaei6FCl8C6xfQomXqu+cuzkIw==}
     requiresBuild: true
@@ -3750,6 +3784,15 @@ packages:
       '@fastify/busboy': 2.1.0
     dev: false
 
+  /unplugin@1.7.1:
+    resolution: {integrity: sha512-JqzORDAPxxs8ErLV4x+LL7bk5pk3YlcWqpSNsIkAZj972KzFZLClc/ekppahKkOczGkwIG6ElFgdOgOlK4tXZw==}
+    dependencies:
+      acorn: 8.11.3
+      chokidar: 3.6.0
+      webpack-sources: 3.2.3
+      webpack-virtual-modules: 0.6.1
+    dev: false
+
   /update-browserslist-db@1.0.13(browserslist@4.23.0):
     resolution: {integrity: sha512-xebP81SNcPuNpPP3uzeW1NYXxI3rxyJzF3pD6sH4jE7o/IX+WtSpwnVU+qIsDPyk0d3hmFQ7mjqc6AtV604hbg==}
     hasBin: true
@@ -3781,6 +3824,14 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /vidstack@1.10.9:
+    resolution: {integrity: sha512-YjaCdQxsRrhQpdR48jtNhusMrC5009BWQ3KtFhBzAMEDN23wW5qLNqdWfSgXVogZdpk/C2W/+79HcdDiW12PYg==}
+    engines: {node: '>=18'}
+    dependencies:
+      media-captions: 1.0.2
+      unplugin: 1.7.1
+    dev: false
 
   /vite@5.1.3(@types/node@20.11.19):
     resolution: {integrity: sha512-UfmUD36DKkqhi/F75RrxvPpry+9+tTkrXfMNZD+SboZqBCMsxKtO52XeGzzuh7ioz+Eo/SYDBbdb0Z7vgcDJew==}
@@ -3834,6 +3885,15 @@ packages:
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+    dev: false
+
+  /webpack-sources@3.2.3:
+    resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}
+    engines: {node: '>=10.13.0'}
+    dev: false
+
+  /webpack-virtual-modules@0.6.1:
+    resolution: {integrity: sha512-poXpCylU7ExuvZK8z+On3kX+S8o/2dQ/SVYueKA0D4WEMXROXgY8Ez50/bQEUmvoSMMrWcrJqCHuhAbsiwg7Dg==}
     dev: false
 
   /whatwg-url@5.0.0:

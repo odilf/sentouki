@@ -36,7 +36,7 @@
     export let filetype: string
 
     $: serverPath = `/raw/${paramsPath}`
-    $: renderer = filetypeRenderers[filetype]
+    $: renderer = filetypeRenderers[filetype.toLowerCase()]
 </script>
 
 <main class="mx-auto min-h-[100dvh] max-w-4xl py-8">
