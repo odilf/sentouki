@@ -12,7 +12,8 @@
         "db-push": "drizzle-kit push:sqlite",
         "db-studio": "drizzle-kit studio",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-        "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+        "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+        "serve-prod": "pnpm build && pnpm preview --port 6942 --host"
     },
     "devDependencies": {
         "@clack/prompts": "^0.7.0",
