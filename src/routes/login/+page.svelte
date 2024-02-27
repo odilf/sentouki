@@ -2,7 +2,6 @@
     import LoginForm from './LoginForm.svelte'
 
     export let data
-    export let form
 </script>
 
 <main class="mx-auto max-w-lg px-4 py-8">

@@ -10,8 +10,14 @@
     }
 
     // let byteStream: ReadableStream<Uint8Array> | null = null
-    let bytes: ArrayBuffer | null = null
+    // let bytes: ArrayBuffer | null = null
 </script>
+
+<Button on:click={() => {
+    getStream(serverPath)
+}}>
+    Download
+</Button>
 
 Binary data. UOH File Browser doesn't yet support interesting ways to represent
 binary data.

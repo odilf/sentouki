@@ -78,7 +78,7 @@
     <!-- thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt" -->
 </media-player>
 
-<style lang="postcss">
+<style lang="postcss" global>
     .player {
         --brand-color: #f5f5f5;
         --focus-color: #4e9cf6;
