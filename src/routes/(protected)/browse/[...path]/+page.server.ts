@@ -1,7 +1,8 @@
 import { lstat } from 'node:fs/promises'
 import type { PageServerLoad } from './$types'
-import { getFileType, getPathsFromParams } from '$lib/fs/path'
+import { getFileExtension, getPathsFromParams } from '$lib/fs/path'
 import { getEntriesFromDirectory } from '$lib/fs/directory'
+import { getFileType, getMimeType } from "$lib/fs/filetypes.server"
 import todo from 'ts-todo'
 import { error } from '@sveltejs/kit'
 
@@ -21,7 +22,9 @@ export const load = (async ({ params }) => {
         return {
             type: 'file' as const,
             filename,
-            filetype: getFileType(filename, stats),
+            extension: getFileExtension(filename),
+            filetype: await getFileType(paths.fsPath),
+            mimeType: await getMimeType(paths.fsPath),
             paramsPath: paths.paramsPath.join('/'),
         }
     } catch (err) {

@@ -34,12 +34,11 @@
          * ```
          */
         // for (const track of textTracks) player.textTracks.add(track);
-
         // Subscribe to state updates.
-        return player.subscribe(({ paused, viewType }) => {
-            // console.log('is paused?', '->', paused);
-            // console.log('is audio view?', '->', viewType === 'audio');
-        })
+        // return player.subscribe(({ paused, viewType }) => {
+        //     // console.log('is paused?', '->', paused);
+        //     // console.log('is audio view?', '->', viewType === 'audio');
+        // })
     })
 
     function onProviderChange(event: MediaProviderChangeEvent) {
@@ -78,27 +77,27 @@
     <!-- thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt" -->
 </media-player>
 
-<style lang="postcss" global>
-    .player {
-        --brand-color: #f5f5f5;
-        --focus-color: #4e9cf6;
-
-        --audio-brand: var(--brand-color);
-        --audio-focus-ring-color: var(--focus-color);
-        --audio-border-radius: 2px;
-
-        --video-brand: var(--brand-color);
-        --video-focus-ring-color: var(--focus-color);
-        --video-border-radius: 2px;
-
-        /* 👉 https://vidstack.io/docs/player/components/layouts/default#css-variables for more. */
-
-        &[data-view-type='audio'] media-poster {
-            display: none;
-        }
-
-        &[data-view-type='video'] {
-            aspect-ratio: 16 /9;
-        }
-    }
-</style>
+<!-- <style global> -->
+<!--     .player { -->
+<!--         --brand-color: #f5f5f5; -->
+<!--         --focus-color: #4e9cf6; -->
+<!---->
+<!--         --audio-brand: var(--brand-color); -->
+<!--         --audio-focus-ring-color: var(--focus-color); -->
+<!--         --audio-border-radius: 2px; -->
+<!---->
+<!--         --video-brand: var(--brand-color); -->
+<!--         --video-focus-ring-color: var(--focus-color); -->
+<!--         --video-border-radius: 2px; -->
+<!---->
+<!--         /* 👉 https://vidstack.io/docs/player/components/layouts/default#css-variables for more. */ -->
+<!---->
+<!--         & [data-view-type='audio'] media-poster { -->
+<!--             display: none; -->
+<!--         } -->
+<!---->
+<!--         & [data-view-type='video'] { -->
+<!--             aspect-ratio: 16 /9; -->
+<!--         } -->
+<!--     } -->
+<!-- </style> -->

@@ -33,10 +33,14 @@ export function getPathsFromParams(params: { path: string }) {
 
 export type Paths = ReturnType<typeof getPathsFromParams>
 
-export function getFileType(name: string, stats: Stats) {
-    if (stats.isDirectory()) {
-        return 'dir' as const
-    }
-
-    return name.split('.').at(-1) ?? todo()
+/**
+ * Returns the thing after the dot
+ *
+ * If it's a directory, it returns an empty string
+ *
+ * @see {@link getFileType}
+ */
+export function getFileExtension(name: string) {
+    return name.split('.').at(-1) ?? ""
 }
+

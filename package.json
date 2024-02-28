@@ -22,6 +22,7 @@
         "@sveltejs/kit": "^2.0.0",
         "@sveltejs/vite-plugin-svelte": "^3.0.0",
         "@types/node": "^20.11.19",
+        "@types/shelljs": "^0.8.15",
         "autoprefixer": "^10.4.16",
         "drizzle-kit": "^0.20.14",
         "lucia": "^3.0.1",

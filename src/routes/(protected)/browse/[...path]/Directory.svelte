@@ -1,11 +1,12 @@
 <script lang="ts">
     import * as Table from '$lib/components/ui/table'
-    import * as ft from './file/filetypes'
+    import { ft } from '$lib/fs'
     import { goto, preloadData } from '$app/navigation'
-    import type { Entry } from '$lib/fs/directory'
-    import { formatBytes } from "$lib/fs/size"
+    import type { Entry as EntryType } from '$lib/fs/directory'
+    import Entry from "./Entry.svelte"
+    import { formatBytes } from '$lib/fs/size'
 
-    export let entries: Entry[]
+    export let entries: EntryType[]
 </script>
 
 <Table.Root>
@@ -16,33 +17,13 @@
             <Table.Head>Name</Table.Head>
             <Table.Head>Size</Table.Head>
             <Table.Head>Date</Table.Head>
+            <Table.Head>Mime type</Table.Head>
         </Table.Row>
     </Table.Header>
 
     <Table.Body>
         {#each entries as entry, i (entry.appPath)}
-            <Table.Row
-                class="h-16 cursor-pointer"
-                on:click={() => goto(entry.appPath)}
-                on:mouseover={() => preloadData(entry.appPath)}
-            >
-                <Table.Cell class="opacity-25">{i}</Table.Cell>
-                <Table.Cell>
-                    <svelte:component
-                        this={ft.getIcon(entry.type)}
-                        class="h-10 w-10"
-                    />
-                </Table.Cell>
-                <Table.Cell class="font-medium">{entry.name}</Table.Cell>
-                <Table.Cell>{formatBytes(entry.size) ?? 'N/A'}</Table.Cell>
-                <Table.Cell
-                    >{entry.date.toLocaleString('en-US', {
-                        month: 'short',
-                        day: '2-digit',
-                        year: 'numeric',
-                    })}</Table.Cell
-                >
-            </Table.Row>
+            <Entry {entry} index={i} />
         {/each}
     </Table.Body>
 </Table.Root>

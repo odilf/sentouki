@@ -1,13 +1,14 @@
 <script lang="ts">
     import { ArrowBigLeft } from 'lucide-svelte'
-    import * as ft from './filetypes'
+    import { ft } from '$lib/fs'
 
     export let paramsPath: string
     export let filename: string
-    export let filetype: string
+    export let mimeType: string
+    export let extension: string
 
     $: serverPath = `/raw/${paramsPath}`
-    $: renderer = ft.getComponent(filetype)
+    $: renderer = ft.getComponent({ mimeType, extension })
 </script>
 
 <main class="mx-auto min-h-[100dvh] max-w-6xl px-4 py-8">

@@ -1,6 +1,6 @@
 <script lang="ts">
     import Directory from './Directory.svelte'
-    import File from './file/File.svelte'
+    import File from './File.svelte'
 
     export let data
 </script>
@@ -11,6 +11,7 @@
     <File
         paramsPath={data.paramsPath}
         filename={data.filename}
-        filetype={data.filetype}
+        mimeType={data.mimeType}
+        extension={data.extension}
     />
 {/if}
