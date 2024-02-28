@@ -10,7 +10,7 @@
     $: renderer = ft.getComponent(filetype)
 </script>
 
-<main class="mx-auto min-h-[100dvh] max-w-4xl px-4 py-8">
+<main class="mx-auto min-h-[100dvh] max-w-6xl px-4 py-8">
     <h1 class="relative mb-8 flex items-center text-4xl font-bold">
         <a href="./">
             <ArrowBigLeft class="left-0 mr-2 h-9 w-9" />

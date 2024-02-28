@@ -10,6 +10,7 @@ export async function getEntriesFromDirectory({ fsPath, appPath }: Paths) {
         return {
             name,
             type,
+            date: stats.birthtime,
             size: stats.size,
             fsPath: fsEntryPath,
             appPath: `${appPath}/${name}`,

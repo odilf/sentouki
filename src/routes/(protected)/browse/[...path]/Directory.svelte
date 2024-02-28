@@ -3,6 +3,7 @@
     import * as ft from './file/filetypes'
     import { goto, preloadData } from '$app/navigation'
     import type { Entry } from '$lib/fs/directory'
+    import { formatBytes } from "$lib/fs/size"
 
     export let entries: Entry[]
 </script>
@@ -14,6 +15,7 @@
             <Table.Head class="w-[100px]">Type</Table.Head>
             <Table.Head>Name</Table.Head>
             <Table.Head>Size</Table.Head>
+            <Table.Head>Date</Table.Head>
         </Table.Row>
     </Table.Header>
 
@@ -32,7 +34,14 @@
                     />
                 </Table.Cell>
                 <Table.Cell class="font-medium">{entry.name}</Table.Cell>
-                <Table.Cell>{entry.size ?? 'N/A'}</Table.Cell>
+                <Table.Cell>{formatBytes(entry.size) ?? 'N/A'}</Table.Cell>
+                <Table.Cell
+                    >{entry.date.toLocaleString('en-US', {
+                        month: 'short',
+                        day: '2-digit',
+                        year: 'numeric',
+                    })}</Table.Cell
+                >
             </Table.Row>
         {/each}
     </Table.Body>
