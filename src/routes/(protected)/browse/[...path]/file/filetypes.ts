@@ -34,7 +34,7 @@ export const renderers = {
     },
 
     video: {
-        filetypes: ['mp4', 'mov', 'mkv'],
+        filetypes: ['mp4', 'mov', 'mkv', 'm4v'],
         icon: VideoIcon,
         component: Video,
     },
@@ -79,12 +79,14 @@ export function getComponent(filetype: string) {
 }
 
 export function getIcon(filetype: string): ComponentType<Icon> {
+    const ftLower = filetype.toLowerCase()
+
     if (filetype === 'dir') {
         return FolderIcon
     }
 
     for (const { filetypes, icon } of Object.values(renderers)) {
-        if (filetypes.find((ft) => ft === filetype) !== undefined) {
+        if (filetypes.find((ft) => ft === ftLower) !== undefined) {
             return icon
         }
     }
