@@ -88,7 +88,7 @@ function find(data: FullFiletype) {
 	for (const entry of Object.values(renderers)) {
 		if (
 			entry.mimeTypes.some((mt) => {
-				console.log("MMMMMMMTTTTT", { mt, mimeType }, mt === mimeType)
+				console.log("MMMMMMMTTTTT", { mt, mimeType }, mt === mimeType);
 				return mimeType === mt;
 			})
 		) {

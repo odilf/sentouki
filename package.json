@@ -16,6 +16,7 @@
         "serve-prod": "pnpm build && pnpm preview --port 6942 --host"
     },
     "devDependencies": {
+        "@biomejs/biome": "1.5.3",
         "@clack/prompts": "^0.7.0",
         "@sveltejs/adapter-auto": "^3.0.0",
         "@sveltejs/adapter-node": "^4.0.1",
