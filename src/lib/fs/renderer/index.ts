@@ -1,5 +1,6 @@
 export { default as Binary } from "./Binary.svelte";
-export { default as Code } from "./Code.svelte";
+export { default as Code } from "./code/Code.svelte";
+export { default as CodeRenderer } from "./code/CodeRenderer.svelte"
 export { default as Image } from "./Image.svelte";
 export { default as Markdown } from "./Markdown.svelte";
 export { default as ObjectFullScreen } from "./ObjectFullScreen.svelte";

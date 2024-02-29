@@ -56,6 +56,9 @@ dependencies:
   remark-rehype:
     specifier: ^11.1.0
     version: 11.1.0
+  shiki:
+    specifier: ^1.1.7
+    version: 1.1.7
   svelte-headless-table:
     specifier: ^0.18.2
     version: 0.18.2(svelte@4.2.12)
@@ -130,9 +133,6 @@ devDependencies:
   prettier-plugin-tailwindcss:
     specifier: ^0.5.11
     version: 0.5.11(prettier-plugin-svelte@3.2.1)(prettier@3.2.5)
-  shiki:
-    specifier: ^1.1.7
-    version: 1.1.7
   svelte:
     specifier: 4.2.12
     version: 4.2.12
@@ -1731,6 +1731,7 @@ packages:
 
   /@shikijs/core@1.1.7:
     resolution: {integrity: sha512-gTYLUIuD1UbZp/11qozD3fWpUTuMqPSf3svDMMrL0UmlGU7D9dPw/V1FonwAorCUJBltaaESxq90jrSjQyGixg==}
+    dev: false
 
   /@shikijs/rehype@1.1.7:
     resolution: {integrity: sha512-gNNmzQjcosjCAoUBrW6DzCmp6XdUQk4RNmyLsqMaDVpGWQsQCkjMBnBLQ7xWnjq6lwQAlq+m1/19kImsUJnpkg==}
@@ -4281,6 +4282,7 @@ packages:
     resolution: {integrity: sha512-9kUTMjZtcPH3i7vHunA6EraTPpPOITYTdA5uMrvsJRexktqP0s7P3s9HVK80b4pP42FRVe03D7fT3NmJv2yYhw==}
     dependencies:
       '@shikijs/core': 1.1.7
+    dev: false
 
   /signal-exit@4.1.0:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}

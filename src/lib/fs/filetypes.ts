@@ -13,7 +13,7 @@ import { type BundledLanguage, bundledLanguagesInfo } from "shiki";
 import type { ComponentType } from "svelte";
 import {
 	Binary,
-	Code,
+	CodeRenderer,
 	Image,
 	Markdown,
 	ObjectFullScreen,
@@ -25,42 +25,49 @@ export const shikiLanguages = bundledLanguagesInfo.flatMap(
 	({ id, aliases }) => [id, ...(aliases ?? [])],
 ) as BundledLanguage[];
 
-export const programmingLanguages = [...shikiLanguages];
+export const programmingLanguages = [...shikiLanguages /* Add custom langs here */];
+
+type RenderInfo = {
+	mimeTypes: string[] | ((givenMt: string) => boolean);
+	extensions: string[];
+	icon: ComponentType<Icon>;
+	component: ComponentType;
+};
 
 export const renderers = {
 	image: {
-		mimeTypes: [],
+		mimeTypes: (s: string) => s.startsWith("image/"),
 		extensions: ["png", "jpg", "jpeg", "bmp"],
 		icon: FileImageIcon,
 		component: Image,
 	},
 
 	video: {
-		mimeTypes: [],
+		mimeTypes: (s: string) => s.startsWith("video/") || s.startsWith("audio/"),
 		extensions: ["mp4", "mov", "mkv", "m4v"],
 		icon: VideoIcon,
 		component: Video,
 	},
 
 	objectFullScreen: {
-		mimeTypes: [],
+		mimeTypes: ["application/pdf"],
 		extensions: ["pdf"],
 		icon: FileTextIcon,
 		component: ObjectFullScreen,
 	},
 
 	markdown: {
-		mimeTypes: [],
+		mimeTypes: ["text/markdown"],
 		extensions: ["md", "markdown"],
 		icon: Heading1Icon,
 		component: Markdown,
 	},
 
 	code: {
-		mimeTypes: [],
-		extensions: programmingLanguages,
+		mimeTypes: ["text/plain"],
+		extensions: shikiLanguages,
 		icon: CodeIcon,
-		component: Code,
+		component: CodeRenderer,
 	},
 
 	binary: {
@@ -69,13 +76,13 @@ export const renderers = {
 		icon: BinaryIcon,
 		component: Binary,
 	},
-} as const;
+} as const satisfies Record<string, RenderInfo>;
 
 export type Renderer = keyof typeof renderers;
 
 type FullFiletype = { extension: string; mimeType: string };
 
-function find(data: FullFiletype) {
+function find(data: FullFiletype): RenderInfo | null {
 	const extension = data.extension.toLowerCase();
 	const mimeType = data.mimeType.toLowerCase();
 
@@ -86,13 +93,14 @@ function find(data: FullFiletype) {
 	}
 
 	for (const entry of Object.values(renderers)) {
-		if (
-			entry.mimeTypes.some((mt) => {
-				console.log("MMMMMMMTTTTT", { mt, mimeType }, mt === mimeType);
-				return mimeType === mt;
-			})
-		) {
-			return entry;
+		if (Array.isArray(entry.mimeTypes)) {
+			if (entry.mimeTypes.some((pattern) => mimeType === pattern)) {
+				return entry;
+			}
+		} else {
+			if (entry.mimeTypes(mimeType)) {
+				return entry;
+			}
 		}
 	}
 
