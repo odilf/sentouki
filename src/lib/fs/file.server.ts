@@ -50,20 +50,20 @@ type GetFileDataOptions = Partial<{
         | false
 }>
 
-function makeSafe<T extends (...args: Parameters<T>) => ReturnType<T>>(
-    f: T
-): (...args: Parameters<T>) => ReturnType<T> | null {
-    return (...args) => {
+function makeSafe<T extends unknown[], R>(
+    f: (...args: T) => Promise<R>
+): (...args: T) => Promise<R | null> {
+    return async (...args) => {
         try {
-            return f(...args)
+            return await f(...args)
         } catch (err) {
             return null
         }
     }
 }
 
-const lstatSafe = makeSafe((path: string) => lstat(path))
-const readdirSafe = makeSafe((path: string) => readdir(path))
+const lstatSafe = makeSafe(async (path: string) => await lstat(path))
+const readdirSafe = makeSafe(async (path: string) => await readdir(path))
 
 async function getOnlyFileDataFromFilesystem(
     pathComponents: string[]
@@ -107,6 +107,7 @@ export async function getFileDataFromFilesystem(
     }
 
     const childNames = await readdirSafe(fsPath)
+    // If file exists, `readdir` should always succeed
     if (childNames === null) {
         return null
     }
