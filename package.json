@@ -4,16 +4,16 @@
     "private": true,
     "scripts": {
         "dev": "vite dev",
-        "dev-remote": "vite dev --port 6942 --host",
         "build": "vite build",
         "preview": "vite preview",
         "format": "prettier --write .",
-        "db-generate": "drizzle-kit generate:sqlite",
-        "db-push": "drizzle-kit push:sqlite",
-        "db-studio": "drizzle-kit studio",
+        "db:generate": "drizzle-kit generate:sqlite",
+        "db:push": "drizzle-kit push:sqlite",
+        "db:studio": "drizzle-kit studio",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-        "serve-prod": "pnpm build && pnpm preview --port 6942 --host"
+        "remote:dev": "vite dev --port 6942 --host",
+        "remote:production": "git pull && pnpm build && pnpm preview --port 6942 --host"
     },
     "devDependencies": {
         "@biomejs/biome": "1.5.3",
@@ -49,6 +49,7 @@
         "@shikijs/rehype": "^1.1.7",
         "bits-ui": "^0.18.1",
         "clsx": "^2.1.0",
+        "cmdk-sv": "^0.0.13",
         "drizzle-orm": "^0.29.4",
         "formsnap": "^0.5.0",
         "lucide-svelte": "^0.335.0",

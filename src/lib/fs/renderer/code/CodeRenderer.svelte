@@ -1,8 +1,5 @@
 <script lang="ts">
-    import {
-        bundledLanguages,
-        type BundledLanguage,
-    } from 'shiki'
+    import { bundledLanguages, type BundledLanguage } from 'shiki'
     import Code from './Code.svelte'
 
     export let serverPath: string
@@ -14,7 +11,7 @@
         return extension in bundledLanguages
     }
 
-    $: lang = isBundledLanguage(extension) ? extension : 'txt' as const
+    $: lang = isBundledLanguage(extension) ? extension : ('txt' as const)
 
     async function getFile(serverPath: string) {
         const response = await fetch(serverPath)

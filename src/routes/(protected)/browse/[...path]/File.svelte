@@ -1,14 +1,13 @@
 <script lang="ts">
     import { ArrowBigLeft } from 'lucide-svelte'
     import { ft } from '$lib/fs'
+    import type { FileData } from '$lib/fs/file'
+    import * as path from '$lib/fs/path'
 
-    export let paramsPath: string
-    export let filename: string
-    export let mimeType: string
-    export let extension: string
+    export let data: FileData
 
-    $: serverPath = `/raw/${paramsPath}`
-    $: renderer = ft.getComponent({ mimeType, extension })
+    $: serverPath = path.getServerRaw(data.path)
+    $: renderer = ft.getComponent(data)
 </script>
 
 <main class="mx-auto min-h-[100dvh] max-w-6xl px-4 py-8">
@@ -16,7 +15,7 @@
         <a href="./">
             <ArrowBigLeft class="left-0 mr-2 h-9 w-9" />
         </a>
-        {filename}
+        {data.name}
     </h1>
 
     <svelte:component this={renderer} {serverPath} />

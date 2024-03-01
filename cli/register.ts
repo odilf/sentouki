@@ -1,5 +1,3 @@
-// Easiest way to run is with bun
-
 import { outro, password, text } from '@clack/prompts'
 import { register } from '../src/lib/server/auth/register'
 

@@ -18,17 +18,17 @@
 
     <div class="mx-auto flex gap-4">
         {#if data.user}
-            <Button class="mx-auto w-fit p-6 text-lg">
+            <Button class="py-6 text-xl" variant="default" size="lg">
                 <a href="/browse" data-sveltekit-preload-code="eager">
                     Browse
                 </a>
             </Button>
 
-            <Button class="mx-auto w-fit p-6 text-lg">
-                <a href="/profile"> Profile </a>
+            <Button class="py-6 text-xl" variant="secondary" size="lg">
+                <a href="/settings"> Settings </a>
             </Button>
         {:else}
-            <Button class="mx-auto w-fit p-6 text-lg">
+            <Button class="py-6 text-xl" variant="secondary" size="lg">
                 <a href="/login"> Log in </a>
             </Button>
         {/if}

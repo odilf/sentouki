@@ -1,4 +1,4 @@
-export * as ft from "./filetypes";
+export * as ft from './filetypes'
 
 // import todo from 'ts-todo'
 //

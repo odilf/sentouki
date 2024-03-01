@@ -5,13 +5,8 @@
     export let data
 </script>
 
-{#if data.type === 'dir'}
-    <Directory entries={data.entries} />
+{#if 'children' in data.file}
+    <Directory children={data.file.children} />
 {:else}
-    <File
-        paramsPath={data.paramsPath}
-        filename={data.filename}
-        mimeType={data.mimeType}
-        extension={data.extension}
-    />
+    <File data={data.file} />
 {/if}

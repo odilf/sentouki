@@ -1,34 +1,16 @@
-import { lstat } from "node:fs/promises";
-import { getEntriesFromDirectory } from "$lib/fs/directory";
-import { getFileType, getMimeType } from "$lib/fs/filetypes.server";
-import { getFileExtension, getPathsFromParams } from "$lib/fs/path";
-import { error } from "@sveltejs/kit";
-import todo from "ts-todo";
-import type { PageServerLoad } from "./$types";
+import { getPathsFromParams } from '$lib/fs/path.server'
+import { error } from '@sveltejs/kit'
+import type { PageServerLoad } from './$types'
+import { getFileData } from '$lib/fs/file.server'
 
 export const load = (async ({ params }) => {
-	const paths = getPathsFromParams(params);
-	try {
-		const stats = await lstat(paths.fsPath);
-		if (stats.isDirectory()) {
-			return {
-				type: "dir" as const,
-				entries: await getEntriesFromDirectory(paths),
-			};
-		}
+    const { pathComponents } = getPathsFromParams(params)
 
-		const filename = paths.paramsPath.at(-1) ?? todo();
+    const file = await getFileData(pathComponents)
 
-		return {
-			type: "file" as const,
-			filename,
-			extension: getFileExtension(filename),
-			filetype: await getFileType(paths.fsPath),
-			mimeType: await getMimeType(paths.fsPath),
-			paramsPath: paths.paramsPath.join("/"),
-		};
-	} catch (err) {
-		console.warn(err);
-		throw error(404, `Could not find file (${paths.paramsPath.join("/")})`);
-	}
-}) satisfies PageServerLoad;
+    if (file === null) {
+        throw error(404, `Could not find file (${params.path})`)
+    }
+
+    return { file }
+}) satisfies PageServerLoad

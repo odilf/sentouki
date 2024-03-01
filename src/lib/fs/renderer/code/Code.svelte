@@ -1,6 +1,10 @@
 <script lang="ts" context="module">
     import { browser } from '$app/environment'
-    import { getHighlighter, type BundledLanguage, type SpecialLanguage } from 'shiki'
+    import {
+        getHighlighter,
+        type BundledLanguage,
+        type SpecialLanguage,
+    } from 'shiki'
 
     // TODO: Use dynamic fine grained import or something
     // https://shiki.style/guide/install#fine-grained-bundle
@@ -15,7 +19,7 @@
     export let lang: BundledLanguage | SpecialLanguage
 
     async function getHtml(codePromise: Promise<string>) {
-        const code = await codePromise 
+        const code = await codePromise
         await highlighter.loadLanguage(lang)
         const file = highlighter.codeToHtml(code, {
             lang,
