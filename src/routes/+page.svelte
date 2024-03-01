@@ -28,7 +28,7 @@
                 <a href="/settings"> Settings </a>
             </Button>
         {:else}
-            <Button class="py-6 text-xl" variant="secondary" size="lg">
+            <Button class="py-6 text-xl" variant="default" size="lg">
                 <a href="/login"> Log in </a>
             </Button>
         {/if}
