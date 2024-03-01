@@ -1,6 +1,7 @@
 import { lstat, readdir } from 'node:fs/promises'
 import { getPathsFromPathComponents } from './path.server'
-import { type FileOrDirectory, type FileData, type DateRange } from './file'
+import { type FileOrDirectory, type FileData } from './file'
+import type { DateRange } from './date'
 import { getMimeType } from './filetypes.server'
 import type { Stats } from 'node:fs'
 import { db } from '$lib/server/db'
@@ -43,10 +44,10 @@ export async function getFileData(
 
 type GetFileDataOptions = Partial<{
     useCache:
-    | {
-        fallback: 'filesystem' | 'generate'
-    }
-    | false
+        | {
+              fallback: 'filesystem' | 'generate'
+          }
+        | false
 }>
 
 function makeSafe<T extends (...args: Parameters<T>) => ReturnType<T>>(
@@ -62,7 +63,7 @@ function makeSafe<T extends (...args: Parameters<T>) => ReturnType<T>>(
 }
 
 const lstatSafe = makeSafe((path: string) => lstat(path))
-const readdirSafe = makeSafe(readdir)
+const readdirSafe = makeSafe((path: string) => readdir(path))
 
 async function getOnlyFileDataFromFilesystem(
     pathComponents: string[]
@@ -105,8 +106,11 @@ export async function getFileDataFromFilesystem(
         return fileData
     }
 
-    // If file exists, `readdir` should always succeed
-    const childNames = await readdir(fsPath)
+    const childNames = await readdirSafe(fsPath)
+    if (childNames === null) {
+        return null
+    }
+
     const children = childNames.map(async (childName) => {
         const fsData = await getOnlyFileDataFromFilesystem([
             ...pathComponents,
@@ -168,21 +172,21 @@ export async function getFileDataFromCache(
 export async function populateFileDataCache(
     path: string[] = []
 ): Promise<FileOrDirectory | null> {
-    console.log("populating", path)
+    console.log('populating', path)
     // Try to get data from cache
     const cacheData = await getFileDataFromCache(path)
     if (cacheData !== null) {
         return cacheData
     }
 
-    console.log("p1", path)
+    console.log('p1', path)
 
     const fsData = await getFileDataFromFilesystem(path)
     if (fsData === null) {
         return null
     }
 
-    console.log("p2")
+    console.log('p2')
 
     const parent = path.length === 0 ? [] : path.slice(0, -1)
     const isDirectory = 'children' in fsData
@@ -198,13 +202,17 @@ export async function populateFileDataCache(
             parent: parent.join('/'),
         })
 
-        console.log("p3-bis")
+        console.log('p3-bis')
 
         return fsData
     }
 
     const { fsPath } = getPathsFromPathComponents(path)
-    const childrenNames = await readdir(fsPath)
+    const childrenNames = await readdirSafe(fsPath)
+    if (childrenNames === null) {
+        return null
+    }
+
     const children = (
         await Promise.all(
             childrenNames.map((childName) =>
@@ -213,17 +221,24 @@ export async function populateFileDataCache(
         )
     ).filter((data) => data !== null) as FileOrDirectory[] // TODO: Maybe throw here instead of filtering
 
-    console.log("p3")
+    console.log('p3')
 
-    const date = (children.length === 0 ? fsData.date
-        : {
-            first: new Date(
-                Math.min(...children.map((child) => child.date.first.getTime()))
-            ),
-            last: new Date(
-                Math.max(...children.map((child) => child.date.last.getTime())) ?? fsData.date
-            ),
-        }) satisfies DateRange
+    const date = (
+        children.length === 0
+            ? fsData.date
+            : {
+                  first: new Date(
+                      Math.min(
+                          ...children.map((child) => child.date.first.getTime())
+                      )
+                  ),
+                  last: new Date(
+                      Math.max(
+                          ...children.map((child) => child.date.last.getTime())
+                      )
+                  ),
+              }
+    ) satisfies DateRange
 
     const size = children.map((child) => child.size).reduce((a, b) => a + b, 0)
 
@@ -237,9 +252,9 @@ export async function populateFileDataCache(
         parent: parent.join('/'),
     })
 
-    console.log("p4")
+    console.log('p4')
 
-    console.log("finished populating", path)
+    console.log('finished populating', path)
 
     return {
         name: fsData.name,
