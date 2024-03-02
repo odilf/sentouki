@@ -1,6 +1,6 @@
 <script lang="ts">
     import { ArrowBigLeft } from 'lucide-svelte'
-    import { ft } from '$lib/fs'
+    import * as ft from '$lib/fs/filetypes'
     import type { FileData } from '$lib/fs/file'
     import * as path from '$lib/fs/path'
 

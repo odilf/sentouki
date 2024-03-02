@@ -1,9 +1,10 @@
 <script lang="ts">
     import { goto, preloadData } from '$app/navigation'
     import * as Table from '$lib/components/ui/table'
-    import { ft } from '$lib/fs'
-    import { type FileData, displayDateRange } from '$lib/fs/file'
+    import * as ft from '$lib/fs/filetypes'
     import * as path from '$lib/fs/path'
+    import { type FileData } from '$lib/fs/file'
+    import { displayDateRange } from '$lib/fs/date'
     import { formatBytes } from '$lib/fs/size'
 
     export let data: FileData

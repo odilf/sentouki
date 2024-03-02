@@ -1,3 +1,5 @@
+import type { DateRange } from './date'
+
 /**
  * Generic data for files and directories
  */
@@ -41,28 +43,3 @@ export type DirectoryData = {
 export type Directory = FileData & DirectoryData
 
 export type FileOrDirectory = FileData | Directory
-
-/**
- * A date range.
- *
- * If `start === end` then consider it a single date.
- */
-export type DateRange = {
-    first: Date
-    last: Date
-}
-
-export function dateRangeSingle(date: Date) {
-    return {
-        start: date,
-        end: date,
-    }
-}
-
-export function displayDateRange({ first, last }: DateRange): string {
-    if (first === last) {
-        return first.toISOString()
-    }
-
-    return `${first.toISOString()} - ${last.toISOString()}`
-}
