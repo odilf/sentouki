@@ -24,7 +24,7 @@ async function runFileCommand(
     return await new Promise((resolve, reject) => {
         exec(`file ${flags.join(' ')} "${fsPath}"`, (error, stdout, stderr) => {
             if (error) {
-                return reject(stderr)
+                return reject(`File error ${stderr}`)
             }
 
             const mimeType =

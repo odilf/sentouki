@@ -1,10 +1,30 @@
-import { createReadStream } from 'fs'
+import { ReadStream, createReadStream } from 'fs'
 import { Readable } from 'node:stream'
 import * as path from '$lib/fs/path.server'
 import { parseRange } from '@httpland/range-parser'
 import { error } from '@sveltejs/kit'
 import { lstat } from 'fs/promises'
 import type { RequestHandler } from './$types'
+
+async function* nodeStreamToIterator(stream: ReadStream) {
+    for await (const chunk of stream) {
+        yield chunk;
+    }
+}
+
+function iteratorToStream<T>(iterator: AsyncGenerator<T>) {
+    return new ReadableStream({
+        async pull(controller) {
+            const { value, done } = await iterator.next()
+
+            if (done) {
+                controller.close()
+            } else {
+                controller.enqueue(value)
+            }
+        },
+    })
+}
 
 export const GET: RequestHandler = async ({ params, request }) => {
     const { pathComponents } = path.getPathsFromParams(params)
@@ -18,9 +38,13 @@ export const GET: RequestHandler = async ({ params, request }) => {
 
         // TODO: Check soundness of `as` cast. It seems the only difference
         // is a transform that can take an `undefined` in the other case
-        const stream = Readable.toWeb(
-            createReadStream(fsPath, { start, end })
-        ) as ReadableStream
+        // const nodeStream = Readable.toWeb(
+        //     createReadStream(fsPath, { start, end })
+        // ) 
+
+        const nodeStream = createReadStream(fsPath, { start, end })
+        const iterator = nodeStreamToIterator(nodeStream)
+        const stream = iteratorToStream(iterator)
 
         return new Response(stream, {
             status: isComplete ? 200 : 206,
