@@ -4,4 +4,3 @@ tests
 .sveltekit
 *.log*
 .cache
-.env

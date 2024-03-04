@@ -180,14 +180,10 @@ export async function populateFileDataCache(
         return cacheData
     }
 
-    console.log('p1', path)
-
     const fsData = await getFileDataFromFilesystem(path)
     if (fsData === null) {
         return null
     }
-
-    console.log('p2')
 
     const parent = path.length === 0 ? [] : path.slice(0, -1)
     const isDirectory = 'children' in fsData
@@ -203,7 +199,7 @@ export async function populateFileDataCache(
             parent: parent.join('/'),
         })
 
-        console.log('p3-bis')
+        console.log('finished', path)
 
         return fsData
     }
@@ -222,7 +218,7 @@ export async function populateFileDataCache(
         )
     ).filter((data) => data !== null) as FileOrDirectory[] // TODO: Maybe throw here instead of filtering
 
-    console.log('p3')
+    console.log('finished', path)
 
     const date = (
         children.length === 0

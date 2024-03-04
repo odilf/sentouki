@@ -1,40 +1,22 @@
-# Build the first stage with alpine node image and name as build
-FROM node:18-alpine3.17 as build
-
-# update and install the latest dependencies on docker base image
-# Add non root user to the docker image and set the user
-RUN apk update && apk upgrade && adduser -D svelteuser
-USER svelteuser
-
-# set work dir as app
+FROM node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+COPY . /app
 WORKDIR /app
 
-# copy the sveltkit project content with proper permission for the user svelteuser
-COPY --chown=svelteuser:svelteuser . /app
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-# install all the project npm dependencies and 
-# build the svelte project to generate the artifacts in build directory
-RUN npm install && npm run build
+FROM base AS build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run build
 
-# we are using multi stage build process to keep the image size as small as possible
-FROM node:18-alpine3.17
-# update and install latest dependencies, add dumb-init package
-# add and set non root user
-RUN apk update && apk upgrade && apk add dumb-init && adduser -D svelteuser
-USER svelteuser
-
-# set work dir as app
-WORKDIR /app
-
-# copy the build directory to the /app directory of second stage 
-COPY --chown=svelteuser:svelteuser --from=build /app/build /app/package.json ./
-
-# expose 8080 on container
-EXPOSE 8080
-
-# set app host and port and env as production
-ENV HOST=0.0.0.0 PORT=8080 NODE_ENV=production
-
-# start the app with dumb init to spawn the Node.js runtime process
-# with signal support
-CMD ["dumb-init","node","index.js"]
+FROM base
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y file && rm -rf /var/lib/apt/lists/*
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/build /app/build
+EXPOSE 3000
+ENV PORT 3000
+CMD [ "node", "-r", "dotenv/config", "build" ]
