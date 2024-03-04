@@ -6,14 +6,9 @@ TODO: Expand readme.
 
 ## Docker instructions
 
-### Build
+Run with docker compose:
 
 ```bash
-docker build --pull --rm -f "Dockerfile" -t sveltekitdocker:latest "."
+docker compose up --build
 ```
 
-### Run 
-
-```bash
-docker run --rm -d -p 8080:8080/tcp sveltekitdocker:latest
-```
