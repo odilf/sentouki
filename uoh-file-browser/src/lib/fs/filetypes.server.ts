@@ -1,4 +1,4 @@
-import { exec } from 'node:child_process'
+import { execFile } from 'node:child_process'
 import todo from 'ts-todo'
 
 /**
@@ -22,7 +22,7 @@ async function runFileCommand(
     flags: string[] = []
 ): Promise<string> {
     return await new Promise((resolve, reject) => {
-        exec(`file ${flags.join(' ')} "${fsPath}"`, (error, stdout, stderr) => {
+        execFile("file", [...flags, fsPath], (error, stdout, stderr) => {
             if (error) {
                 return reject(`File error ${stderr}`)
             }
