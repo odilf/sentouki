@@ -7,6 +7,7 @@ import type { Stats } from 'node:fs'
 import { db } from '$lib/server/db'
 import { sql } from 'drizzle-orm'
 import { files } from '$lib/server/db/schema'
+import { logger } from '$lib/logger'
 
 export async function getFileData(
     pathComponents: string[],
@@ -173,7 +174,10 @@ export async function getFileDataFromCache(
 export async function populateFileDataCache(
     path: string[] = []
 ): Promise<FileOrDirectory | null> {
-    console.log('populating', path)
+    const child = logger.child({ path })
+    logger.debug('child??', child)
+    child.debug('populating')
+
     // Try to get data from cache
     const cacheData = await getFileDataFromCache(path)
     if (cacheData !== null) {
@@ -199,14 +203,17 @@ export async function populateFileDataCache(
             parent: parent.join('/'),
         })
 
-        console.log('finished', path)
+        child.debug('finished')
 
         return fsData
     }
+    
+    child.debug(`${path} is a directory, getting children data`)
 
     const { fsPath } = getPathsFromPathComponents(path)
     const childrenNames = await readdirSafe(fsPath)
     if (childrenNames === null) {
+        child.warn(`${childrenNames} was null`)
         return null
     }
 
@@ -218,7 +225,7 @@ export async function populateFileDataCache(
         )
     ).filter((data) => data !== null) as FileOrDirectory[] // TODO: Maybe throw here instead of filtering
 
-    console.log('finished', path)
+    child.debug('finished getting children data')
 
     const date = (
         children.length === 0
@@ -249,9 +256,7 @@ export async function populateFileDataCache(
         parent: parent.join('/'),
     })
 
-    console.log('p4')
-
-    console.log('finished populating', path)
+    child.debug('inserted into db, finished populating')
 
     return {
         name: fsData.name,

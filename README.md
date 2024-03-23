@@ -1,5 +1,14 @@
-# UOH Project
+# UOH File Browser
 
-The... Unified Organizational Hub or Ultimate Odilf Headquarters. Unsure about the meaning of the acronym.
+File browser for the UOH files. 
 
-The hub for the tools for maintaining my digital identity, I guess. 
+TODO: Expand readme.
+
+## Docker instructions
+
+Run with docker compose:
+
+```bash
+docker compose up --build
+```
+

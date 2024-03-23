@@ -12,7 +12,7 @@ export function getFs(pathComponents: string[]) {
 
 export function getPathsFromPathComponents(pathComponents: string[]) {
     const fsPath = getFs(pathComponents)
-    const appPath = getServerBrowse(pathComponents)
+    const appPath = g/Users/odilf/Downloads/Magnibrick Cut #5 Sub Français.mp4 etServerBrowse(pathComponents)
 
     return {
         fsPath,
