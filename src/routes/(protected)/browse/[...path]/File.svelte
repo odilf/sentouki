@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { ArrowBigLeft } from 'lucide-svelte'
-    import * as ft from '$lib/fs/filetypes'
-    import type { FileData } from '$lib/fs/file'
-    import * as path from '$lib/fs/path'
+    import { ArrowBigLeft } from "lucide-svelte";
+    import * as ft from "$lib/fs/filetypes";
+    import type { FileData } from "$lib/fs/file";
+    import * as path from "$lib/fs/path";
 
-    export let data: FileData
+    export let data: FileData;
 
-    $: serverPath = path.getServerRaw(data.path)
-    $: renderer = ft.getComponent(data)
+    $: serverPath = path.getServerRaw(data.path);
+    $: renderer = ft.getComponent(data);
 </script>
 
 <main class="mx-auto min-h-[100dvh] max-w-6xl px-4 py-8">

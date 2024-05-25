@@ -1,11 +1,11 @@
 <script lang="ts">
-    import Directory from './Directory.svelte'
-    import File from './File.svelte'
+    import Directory from "./Directory.svelte";
+    import File from "./File.svelte";
 
-    export let data
+    let data: PageData;
 </script>
 
-{#if 'children' in data.file}
+{#if "children" in data.file}
     <Directory children={data.file.children} />
 {:else}
     <File data={data.file} />

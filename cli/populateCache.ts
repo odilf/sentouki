@@ -1,30 +1,30 @@
-import { outro, confirm } from '@clack/prompts'
-import { exit } from 'node:process'
-import { populateFileDataCache } from '../src/lib/fs/file.server'
-import { logger } from '../src/lib/logger'
+import { outro, confirm } from "@clack/prompts";
+import { exit } from "node:process";
+import { populateFileDataCache } from "../src/lib/fs/file.server";
+import { logger } from "../src/lib/logger";
 
+const path = "/media/odilf/UOH-ARCHIVE/Hierarchy/Pictures";
+const pathComponents = path.split("/").slice(3);
 
-const path = '/media/odilf/UOH-ARCHIVE/Hierarchy/Pictures'
-const pathComponents = path.split('/').slice(3)
+logger.debug("test");
 
-logger.debug("test")
-
-exit()
+exit();
 
 const confirmed = await confirm({
-    message: `About to populate ${pathComponents.join("/")}. This might take a while. Are you sure you want to proceed?`,
-})
+	message: `About to populate ${pathComponents.join(
+		"/",
+	)}. This might take a while. Are you sure you want to proceed?`,
+});
 
 if (!confirmed) {
-    outro('Bailing')
-    exit()
+	outro("Bailing");
+	exit();
 }
 
-logger.info("Starting")
+logger.info("Starting");
 
+await populateFileDataCache(pathComponents);
 
-await populateFileDataCache(pathComponents)
+logger.info("finished");
 
-logger.info("finished")
-
-outro('Cache has been populated!')
+outro("Cache has been populated!");

@@ -1,270 +1,266 @@
-import { lstat, readdir } from 'node:fs/promises'
-import { getPathsFromPathComponents } from './path.server'
-import { type FileOrDirectory, type FileData } from './file'
-import type { DateRange } from './date'
-import { getMimeType } from './filetypes.server'
-import type { Stats } from 'node:fs'
-import { db } from '$lib/server/db'
-import { sql } from 'drizzle-orm'
-import { files } from '$lib/server/db/schema'
-import { logger } from '$lib/logger'
+import { lstat, readdir } from "node:fs/promises";
+import { getPathsFromPathComponents } from "./path.server";
+import { type FileOrDirectory, type FileData } from "./file";
+import type { DateRange } from "./date";
+import { getMimeType } from "./filetypes.server";
+import type { Stats } from "node:fs";
+import { db } from "$lib/server/db";
+import { sql } from "drizzle-orm";
+import { files } from "$lib/server/db/schema";
+import { logger } from "$lib/logger";
 
 export async function getFileData(
-    pathComponents: string[],
-    options?: GetFileDataOptions
+	pathComponents: string[],
+	options?: GetFileDataOptions,
 ): Promise<FileOrDirectory | null> {
-    const defaultOptions = {
-        useCache: { fallback: 'filesystem' },
-    }
+	const defaultOptions = {
+		useCache: { fallback: "filesystem" },
+	};
 
-    const { useCache }: GetFileDataOptions = Object.assign(
-        defaultOptions,
-        options
-    )
+	const { useCache }: GetFileDataOptions = Object.assign(
+		defaultOptions,
+		options,
+	);
 
-    if (!useCache) {
-        return await getFileDataFromFilesystem(pathComponents)
-    }
+	if (!useCache) {
+		return await getFileDataFromFilesystem(pathComponents);
+	}
 
-    const fileData = await getFileDataFromCache(pathComponents)
+	const fileData = await getFileDataFromCache(pathComponents);
 
-    if (fileData) {
-        return fileData
-    }
+	if (fileData) {
+		return fileData;
+	}
 
-    if (useCache.fallback === 'filesystem') {
-        return await getFileDataFromFilesystem(pathComponents)
-    }
+	if (useCache.fallback === "filesystem") {
+		return await getFileDataFromFilesystem(pathComponents);
+	}
 
-    if (useCache.fallback === 'generate') {
-        return await populateFileDataCache(pathComponents)
-    }
+	if (useCache.fallback === "generate") {
+		return await populateFileDataCache(pathComponents);
+	}
 
-    throw new Error('unreachable')
+	throw new Error("unreachable");
 }
 
 type GetFileDataOptions = Partial<{
-    useCache:
-        | {
-              fallback: 'filesystem' | 'generate'
-          }
-        | false
-}>
+	useCache:
+		| {
+				fallback: "filesystem" | "generate";
+		  }
+		| false;
+}>;
 
 function makeSafe<T extends unknown[], R>(
-    f: (...args: T) => Promise<R>
+	f: (...args: T) => Promise<R>,
 ): (...args: T) => Promise<R | null> {
-    return async (...args) => {
-        try {
-            return await f(...args)
-        } catch (err) {
-            return null
-        }
-    }
+	return async (...args) => {
+		try {
+			return await f(...args);
+		} catch (err) {
+			return null;
+		}
+	};
 }
 
-const lstatSafe = makeSafe(async (path: string) => await lstat(path))
-const readdirSafe = makeSafe(async (path: string) => await readdir(path))
+const lstatSafe = makeSafe(async (path: string) => await lstat(path));
+const readdirSafe = makeSafe(async (path: string) => await readdir(path));
 
 async function getOnlyFileDataFromFilesystem(
-    pathComponents: string[]
+	pathComponents: string[],
 ): Promise<{ fileData: FileData; stats: Stats } | null> {
-    const { fsPath } = getPathsFromPathComponents(pathComponents)
+	const { fsPath } = getPathsFromPathComponents(pathComponents);
 
-    const stats = await lstatSafe(fsPath)
-    if (stats === null) {
-        return null
-    }
+	const stats = await lstatSafe(fsPath);
+	if (stats === null) {
+		return null;
+	}
 
-    const name = pathComponents.at(-1) ?? ''
-    const extension = name.split('.').at(-1) ?? ''
+	const name = pathComponents.at(-1) ?? "";
+	const extension = name.split(".").at(-1) ?? "";
 
-    return {
-        fileData: {
-            name,
-            path: pathComponents,
-            extension,
-            mimeType: await getMimeType(fsPath),
-            date: { first: stats.birthtime, last: stats.birthtime },
-            size: stats.size,
-        },
-        stats,
-    }
+	return {
+		fileData: {
+			name,
+			path: pathComponents,
+			extension,
+			mimeType: await getMimeType(fsPath),
+			date: { first: stats.birthtime, last: stats.birthtime },
+			size: stats.size,
+		},
+		stats,
+	};
 }
 
 export async function getFileDataFromFilesystem(
-    pathComponents: string[]
+	pathComponents: string[],
 ): Promise<FileOrDirectory | null> {
-    const { fsPath } = getPathsFromPathComponents(pathComponents)
-    const fsData = await getOnlyFileDataFromFilesystem(pathComponents)
-    if (fsData === null) {
-        return null
-    }
+	const { fsPath } = getPathsFromPathComponents(pathComponents);
+	const fsData = await getOnlyFileDataFromFilesystem(pathComponents);
+	if (fsData === null) {
+		return null;
+	}
 
-    const { fileData, stats } = fsData
+	const { fileData, stats } = fsData;
 
-    if (!stats.isDirectory()) {
-        return fileData
-    }
+	if (!stats.isDirectory()) {
+		return fileData;
+	}
 
-    const childNames = await readdirSafe(fsPath)
-    // If file exists, `readdir` should always succeed
-    if (childNames === null) {
-        return null
-    }
+	const childNames = await readdirSafe(fsPath);
+	// If file exists, `readdir` should always succeed
+	if (childNames === null) {
+		return null;
+	}
 
-    const children = childNames.map(async (childName) => {
-        const fsData = await getOnlyFileDataFromFilesystem([
-            ...pathComponents,
-            childName,
-        ])
-        return fsData?.fileData
-    })
+	const children = childNames.map(async (childName) => {
+		const fsData = await getOnlyFileDataFromFilesystem([
+			...pathComponents,
+			childName,
+		]);
+		return fsData?.fileData;
+	});
 
-    return {
-        ...fileData,
-        children: (await Promise.all(children)).filter(
-            (data) => data !== undefined
-        ) as FileOrDirectory[],
-    }
+	return {
+		...fileData,
+		children: (await Promise.all(children)).filter(
+			(data) => data !== undefined,
+		) as FileOrDirectory[],
+	};
 }
 
 async function dbToTs({
-    name,
-    path,
-    size,
-    dateStart,
-    dateEnd,
-    mimeType,
+	name,
+	path,
+	size,
+	dateStart,
+	dateEnd,
+	mimeType,
 }: typeof files.$inferSelect): Promise<FileData> {
-    return {
-        name,
-        path: path.split('/'),
-        mimeType,
-        size,
-        date: { first: dateStart, last: dateEnd },
-        extension: name.split('.').at(-1) ?? '',
-    }
+	return {
+		name,
+		path: path.split("/"),
+		mimeType,
+		size,
+		date: { first: dateStart, last: dateEnd },
+		extension: name.split(".").at(-1) ?? "",
+	};
 }
 
 export async function getFileDataFromCache(
-    pathComponents: string[]
+	pathComponents: string[],
 ): Promise<FileOrDirectory | null> {
-    const result = await db.query.files.findFirst({
-        where: sql`${files.path} like ${pathComponents.join('/')}`,
-        with: {
-            children: true,
-        },
-    })
+	const result = await db.query.files.findFirst({
+		where: sql`${files.path} like ${pathComponents.join("/")}`,
+		with: {
+			children: true,
+		},
+	});
 
-    if (!result) {
-        return null
-    }
+	if (!result) {
+		return null;
+	}
 
-    if (result.children.length > 0) {
-        return {
-            ...(await dbToTs(result)),
-            children: await Promise.all(result.children.map(dbToTs)),
-        }
-    }
+	if (result.children.length > 0) {
+		return {
+			...(await dbToTs(result)),
+			children: await Promise.all(result.children.map(dbToTs)),
+		};
+	}
 
-    return await dbToTs(result)
+	return await dbToTs(result);
 }
 
 export async function populateFileDataCache(
-    path: string[] = []
+	path: string[] = [],
 ): Promise<FileOrDirectory | null> {
-    const child = logger.child({ path })
-    logger.debug('child??', child)
-    child.debug('populating')
+	const child = logger.child({ path });
+	logger.debug("child??", child);
+	child.debug("populating");
 
-    // Try to get data from cache
-    const cacheData = await getFileDataFromCache(path)
-    if (cacheData !== null) {
-        return cacheData
-    }
+	// Try to get data from cache
+	const cacheData = await getFileDataFromCache(path);
+	if (cacheData !== null) {
+		return cacheData;
+	}
 
-    const fsData = await getFileDataFromFilesystem(path)
-    if (fsData === null) {
-        return null
-    }
+	const fsData = await getFileDataFromFilesystem(path);
+	if (fsData === null) {
+		return null;
+	}
 
-    const parent = path.length === 0 ? [] : path.slice(0, -1)
-    const isDirectory = 'children' in fsData
+	const parent = path.length === 0 ? [] : path.slice(0, -1);
+	const isDirectory = "children" in fsData;
 
-    if (!isDirectory) {
-        await db.insert(files).values({
-            name: fsData.name,
-            path: path.join('/'),
-            mimeType: fsData.mimeType,
-            dateStart: fsData.date.first,
-            dateEnd: fsData.date.last,
-            size: fsData.size,
-            parent: parent.join('/'),
-        })
+	if (!isDirectory) {
+		await db.insert(files).values({
+			name: fsData.name,
+			path: path.join("/"),
+			mimeType: fsData.mimeType,
+			dateStart: fsData.date.first,
+			dateEnd: fsData.date.last,
+			size: fsData.size,
+			parent: parent.join("/"),
+		});
 
-        child.debug('finished')
+		child.debug("finished");
 
-        return fsData
-    }
-    
-    child.debug(`${path} is a directory, getting children data`)
+		return fsData;
+	}
 
-    const { fsPath } = getPathsFromPathComponents(path)
-    const childrenNames = await readdirSafe(fsPath)
-    if (childrenNames === null) {
-        child.warn(`${childrenNames} was null`)
-        return null
-    }
+	child.debug(`${path} is a directory, getting children data`);
 
-    const children = (
-        await Promise.all(
-            childrenNames.map((childName) =>
-                populateFileDataCache([...path, childName])
-            )
-        )
-    ).filter((data) => data !== null) as FileOrDirectory[] // TODO: Maybe throw here instead of filtering
+	const { fsPath } = getPathsFromPathComponents(path);
+	const childrenNames = await readdirSafe(fsPath);
+	if (childrenNames === null) {
+		child.warn(`${childrenNames} was null`);
+		return null;
+	}
 
-    child.debug('finished getting children data')
+	const children = (
+		await Promise.all(
+			childrenNames.map((childName) =>
+				populateFileDataCache([...path, childName]),
+			),
+		)
+	).filter((data) => data !== null) as FileOrDirectory[]; // TODO: Maybe throw here instead of filtering
 
-    const date = (
-        children.length === 0
-            ? fsData.date
-            : {
-                  first: new Date(
-                      Math.min(
-                          ...children.map((child) => child.date.first.getTime())
-                      )
-                  ),
-                  last: new Date(
-                      Math.max(
-                          ...children.map((child) => child.date.last.getTime())
-                      )
-                  ),
-              }
-    ) satisfies DateRange
+	child.debug("finished getting children data");
 
-    const size = children.map((child) => child.size).reduce((a, b) => a + b, 0)
+	const date = (
+		children.length === 0
+			? fsData.date
+			: {
+					first: new Date(
+						Math.min(...children.map((child) => child.date.first.getTime())),
+					),
+					last: new Date(
+						Math.max(...children.map((child) => child.date.last.getTime())),
+					),
+			  }
+	) satisfies DateRange;
 
-    await db.insert(files).values({
-        name: fsData.name,
-        path: path.join('/'),
-        mimeType: fsData.mimeType,
-        dateStart: date.first,
-        dateEnd: date.last,
-        size,
-        parent: parent.join('/'),
-    })
+	const size = children.map((child) => child.size).reduce((a, b) => a + b, 0);
 
-    child.debug('inserted into db, finished populating')
+	await db.insert(files).values({
+		name: fsData.name,
+		path: path.join("/"),
+		mimeType: fsData.mimeType,
+		dateStart: date.first,
+		dateEnd: date.last,
+		size,
+		parent: parent.join("/"),
+	});
 
-    return {
-        name: fsData.name,
-        extension: fsData.extension,
-        date,
-        size,
-        mimeType: fsData.mimeType,
-        path: fsData.path,
-        children,
-    }
+	child.debug("inserted into db, finished populating");
+
+	return {
+		name: fsData.name,
+		extension: fsData.extension,
+		date,
+		size,
+		mimeType: fsData.mimeType,
+		path: fsData.path,
+		children,
+	};
 }

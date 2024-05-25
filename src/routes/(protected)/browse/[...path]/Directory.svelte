@@ -1,9 +1,9 @@
 <script lang="ts">
-    import * as Table from '$lib/components/ui/table'
-    import Child from './Child.svelte'
-    import type { FileData } from '$lib/fs/file'
+    import * as Table from "$lib/components/ui/table";
+    import Child from "./Child.svelte";
+    import type { FileData } from "$lib/fs/file";
 
-    export let children: FileData[]
+    export let children: FileData[];
 </script>
 
 <Table.Root>

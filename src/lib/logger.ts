@@ -1,27 +1,25 @@
-import pino from 'pino'
+import pino from "pino";
 
 export const logger = pino(
 	{
-		level: process.env.PINO_LOG_LEVEL || 'debug',
+		level: process.env.PINO_LOG_LEVEL || "debug",
 		timestamp: pino.stdTimeFunctions.isoTime,
 	},
 
 	pino.transport({
 		targets: [
 			{
-				target: 'pino/file',
+				target: "pino/file",
 				options: {
-					destination: "logs/test.log"
-				}
+					destination: "logs/test.log",
+				},
 			},
 			{
-				target: 'pino-pretty',
+				target: "pino-pretty",
 				options: {
-					minimumLevel: 'trace'
-				}
-			}
-
+					minimumLevel: "trace",
+				},
+			},
 		],
-	})
+	}),
 );
-

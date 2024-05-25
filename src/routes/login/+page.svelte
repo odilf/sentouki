@@ -1,7 +1,8 @@
 <script lang="ts">
-    import LoginForm from './LoginForm.svelte'
+    import type { PageData } from "./$types";
+    import LoginForm from "./LoginForm.svelte";
 
-    export let data
+    export let data: PageData;
 </script>
 
 <main class="mx-auto max-w-lg px-4 py-8">

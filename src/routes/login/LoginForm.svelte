@@ -1,23 +1,23 @@
 <script lang="ts">
-    import { formSchema } from './schema'
-    import * as Form from '$lib/components/ui/form'
-    import { Input } from '$lib/components/ui/input'
+    import { formSchema } from "./schema";
+    import * as Form from "$lib/components/ui/form";
+    import { Input } from "$lib/components/ui/input";
     import {
         type SuperValidated,
         type Infer,
         superForm,
-    } from 'sveltekit-superforms'
-    import { zodClient } from 'sveltekit-superforms/adapters'
-    import { slide } from 'svelte/transition'
+    } from "sveltekit-superforms";
+    import { zodClient } from "sveltekit-superforms/adapters";
+    import { slide } from "svelte/transition";
 
-    export let data: SuperValidated<Infer<typeof formSchema>>
-    export let action: string
+    export let data: SuperValidated<Infer<typeof formSchema>>;
+    export let action: string;
 
     const form = superForm(data, {
         validators: zodClient(formSchema),
-    })
+    });
 
-    const { form: formData, enhance, errors } = form
+    const { form: formData, enhance, errors } = form;
 </script>
 
 <form method="post" use:enhance {action}>

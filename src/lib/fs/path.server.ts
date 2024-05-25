@@ -1,33 +1,33 @@
-import { BASE_PATH } from '$env/static/private'
-import { getServerBrowse } from './path'
-export * from './path'
+import { BASE_PATH } from "$env/static/private";
+import { getServerBrowse } from "./path";
+export * from "./path";
 
-type Path = string[]
+type Path = string[];
 
-const basePath: Path = BASE_PATH.split('/')
+const basePath: Path = BASE_PATH.split("/");
 
 export function getFs(pathComponents: string[]) {
-    return [...basePath, ...pathComponents].join('/')
+	return [...basePath, ...pathComponents].join("/");
 }
 
 export function getPathsFromPathComponents(pathComponents: string[]) {
-    const fsPath = getFs(pathComponents)
-    const appPath = g/Users/odilf/Downloads/Magnibrick Cut #5 Sub Français.mp4 etServerBrowse(pathComponents)
+	const fsPath = getFs(pathComponents);
+	const appPath = getServerBrowse(pathComponents);
 
-    return {
-        fsPath,
-        appPath,
-        pathComponents,
-    }
+	return {
+		fsPath,
+		appPath,
+		pathComponents,
+	};
 }
 
 export function getPathsFromParams(params: { path: string }) {
-    const pathComponents = params.path.split('/').filter(Boolean)
+	const pathComponents = params.path.split("/").filter(Boolean);
 
-    return { pathComponents }
+	return { pathComponents };
 }
 
-export type Paths = ReturnType<typeof getPathsFromParams>
+export type Paths = ReturnType<typeof getPathsFromParams>;
 
 /**
  * Returns the thing after the dot
@@ -37,5 +37,5 @@ export type Paths = ReturnType<typeof getPathsFromParams>
  * @see {@link getFileType}
  */
 export function getFileExtension(name: string) {
-    return name.split('.').at(-1) ?? ''
+	return name.split(".").at(-1) ?? "";
 }

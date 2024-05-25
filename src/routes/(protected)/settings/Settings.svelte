@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { enhance } from '$app/forms'
-    import { FormButton } from '$lib/components/ui/form'
-    import type { User } from 'lucia'
-    import { Badge } from '$lib/components/ui/badge'
+    import { enhance } from "$app/forms";
+    import { FormButton } from "$lib/components/ui/form";
+    import type { User } from "lucia";
+    import { Badge } from "$lib/components/ui/badge";
 
-    export let user: User
+    export let user: User;
 </script>
 
 <section class="mb-8">

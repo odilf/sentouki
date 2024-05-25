@@ -1,9 +1,9 @@
-version: '3.8'
+version: "3.8"
 services:
   uoh-file-browser:
     image: uoh-fb
     ports:
-      - '6942:3000'
+      - "6942:3000"
     volumes:
       - ./local.db:/local.db
       - /media/odilf/:/files/

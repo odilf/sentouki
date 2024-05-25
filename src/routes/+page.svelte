@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { Button } from '$lib/components/ui/button'
-    import { Folder } from 'lucide-svelte'
+    import { Button } from "$lib/components/ui/button";
+    import { Folder } from "lucide-svelte";
+    import type { PageData } from "./$types";
 
-    export let data
+    export let data: PageData;
 </script>
 
 <main class="mx-auto grid h-screen content-center gap-8">
