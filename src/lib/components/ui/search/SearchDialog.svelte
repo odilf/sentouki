@@ -1,8 +1,8 @@
 <script lang="ts">
-import { Search } from ".";
-import * as Dialog from "$lib/components/ui/dialog";
+    import { Search } from ".";
+    import * as Dialog from "$lib/components/ui/dialog";
 
-let open = false;
+    let open = false;
 </script>
 
 <Dialog.Root bind:open>
@@ -18,8 +18,8 @@ let open = false;
 
 <svelte:window
     on:keydown={(e) => {
-        if (e.code === 'KeyK' && (e.metaKey || e.ctrlKey)) {
-            open = !open
+        if (e.code === "KeyK" && (e.metaKey || e.ctrlKey)) {
+            open = !open;
         }
     }}
 />
