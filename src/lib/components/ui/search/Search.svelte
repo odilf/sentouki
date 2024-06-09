@@ -1,29 +1,29 @@
 <script lang="ts">
-    import * as Command from '$lib/components/ui/command'
-    import { goto } from '$app/navigation'
-    import { page } from '$app/stores'
-    import type { files } from '$lib/server/db/schema'
-    import { flip } from 'svelte/animate'
-    import * as ft from '$lib/fs/filetypes'
+import * as Command from "$lib/components/ui/command";
+import { goto } from "$app/navigation";
+import { page } from "$app/stores";
+import type { fileTable } from "$lib/server/db/schema";
+import { flip } from "svelte/animate";
+import * as ft from "$lib/fs/filetypes.svelte";
 
-    export let query: string = ''
-    export let open: boolean = false
+export let query = "";
+export let open = false;
 
-    $: results = $page.data?.stream?.searchResult as Promise<
-        (typeof files.$inferSelect)[]
-    >
+$: results = $page.data?.stream?.searchResult as Promise<
+	(typeof fileTable.$inferSelect)[]
+>;
 
-    async function updateSearch(query: string) {
-        // TODO: Maybe clear `search` param if `query` is empty
-        const url = new URL($page.url)
-        url.searchParams.set('search', query)
-        await goto(url, {
-            keepFocus: true,
-            invalidateAll: true,
-        })
-    }
+async function updateSearch(query: string) {
+	// TODO: Maybe clear `search` param if `query` is empty
+	const url = $page.url;
+	url.searchParams.set("search", query);
+	await goto(url, {
+		keepFocus: true,
+		invalidateAll: true,
+	});
+}
 
-    $: updateSearch(query)
+$: updateSearch(query);
 </script>
 
 <Command.Root>
@@ -41,16 +41,16 @@
                 <div animate:flip={{ duration: 300 }}>
                     <Command.Item
                         onSelect={async () => {
-                            console.log(result)
-                            open = false
-                            await goto(`/browse/${result.path}`)
+                            console.log(result);
+                            open = false;
+                            await goto(`/browse/${result.path}`);
                         }}
                         class="flex max-w-[calc(32rem-theme(space.12))] gap-2 overflow-x-hidden"
                     >
                         <svelte:component
                             this={ft.getIcon({
                                 mimeType: result.mimeType,
-                                extension: result.name.split('.').at(-1) ?? '',
+                                extension: result.name.split(".").at(-1) ?? "",
                             })}
                             class="h-4 w-4 min-w-4"
                         />

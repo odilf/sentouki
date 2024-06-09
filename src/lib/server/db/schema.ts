@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const users = sqliteTable("user", {
+export const userTable = sqliteTable("user", {
 	id: text("id").primaryKey(),
 	username: text("username").notNull().unique(),
 	email: text("email").notNull().unique(),
@@ -9,15 +9,15 @@ export const users = sqliteTable("user", {
 	isAdmin: integer("is_admin", { mode: "boolean" }).default(false),
 });
 
-export const sessions = sqliteTable("session", {
+export const sessionTable = sqliteTable("session", {
 	id: text("id").primaryKey(),
 	userId: text("user_id")
 		.notNull()
-		.references(() => users.id),
+		.references(() => userTable.id),
 	expiresAt: integer("expires_at").notNull(),
 });
 
-export const files = sqliteTable("file_cache", {
+export const fileTable = sqliteTable("file_cache", {
 	name: text("name").notNull(),
 	path: text("path").notNull().primaryKey(),
 	mimeType: text("mime_type").notNull(),
@@ -27,21 +27,14 @@ export const files = sqliteTable("file_cache", {
 	parent: text("parent_path").notNull(),
 });
 
-export const filesRelations = relations(files, ({ one, many }) => ({
-	parent: one(files, {
-		fields: [files.parent],
-		references: [files.path],
+export const filesRelations = relations(fileTable, ({ one, many }) => ({
+	parent: one(fileTable, {
+		fields: [fileTable.parent],
+		references: [fileTable.path],
 		relationName: "parent",
 	}),
 
-	children: many(files, {
+	children: many(fileTable, {
 		relationName: "parent",
 	}),
 }));
-
-export const schema = {
-	users,
-	sessions,
-	files,
-	filesRelations,
-};

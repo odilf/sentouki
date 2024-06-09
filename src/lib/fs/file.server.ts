@@ -1,12 +1,12 @@
 import { lstat, readdir } from "node:fs/promises";
 import { getPathsFromPathComponents } from "./path.server";
-import { type FileOrDirectory, type FileData } from "./file";
+import type { FileOrDirectory, FileData } from "./file";
 import type { DateRange } from "./date";
 import { getMimeType } from "./filetypes.server";
 import type { Stats } from "node:fs";
 import { db } from "$lib/server/db";
 import { sql } from "drizzle-orm";
-import { files } from "$lib/server/db/schema";
+import { fileTable } from "$lib/server/db/schema";
 import { logger } from "$lib/logger";
 
 export async function getFileData(
@@ -136,7 +136,7 @@ async function dbToTs({
 	dateStart,
 	dateEnd,
 	mimeType,
-}: typeof files.$inferSelect): Promise<FileData> {
+}: typeof fileTable.$inferSelect): Promise<FileData> {
 	return {
 		name,
 		path: path.split("/"),
@@ -150,8 +150,8 @@ async function dbToTs({
 export async function getFileDataFromCache(
 	pathComponents: string[],
 ): Promise<FileOrDirectory | null> {
-	const result = await db.query.files.findFirst({
-		where: sql`${files.path} like ${pathComponents.join("/")}`,
+	const result = await db.query.fileTable.findFirst({
+		where: sql`${fileTable.path} like ${pathComponents.join("/")}`,
 		with: {
 			children: true,
 		},
@@ -193,7 +193,7 @@ export async function populateFileDataCache(
 	const isDirectory = "children" in fsData;
 
 	if (!isDirectory) {
-		await db.insert(files).values({
+		await db.insert(fileTable).values({
 			name: fsData.name,
 			path: path.join("/"),
 			mimeType: fsData.mimeType,
@@ -237,12 +237,12 @@ export async function populateFileDataCache(
 					last: new Date(
 						Math.max(...children.map((child) => child.date.last.getTime())),
 					),
-			  }
+				}
 	) satisfies DateRange;
 
 	const size = children.map((child) => child.size).reduce((a, b) => a + b, 0);
 
-	await db.insert(files).values({
+	await db.insert(fileTable).values({
 		name: fsData.name,
 		path: path.join("/"),
 		mimeType: fsData.mimeType,

@@ -16,15 +16,15 @@
 	},
 
 	"overrides": [
-      {
-        "include": ["*.svelte"],
-        "linter": {
-          "rules": {
-            "style": {
-              "useConst": "off"
-            }
-          }
-        }
-      }
-    ]
+		{
+			"include": ["*.svelte"],
+			"linter": {
+				"rules": {
+					"style": {
+						"useConst": "off"
+					}
+				}
+			}
+		}
+	]
 }

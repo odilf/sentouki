@@ -2,7 +2,7 @@
     import Directory from "./Directory.svelte";
     import File from "./File.svelte";
 
-    let data: PageData;
+    let { data } = $props();
 </script>
 
 {#if "children" in data.file}

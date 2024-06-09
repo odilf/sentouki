@@ -10,8 +10,13 @@
     import { zodClient } from "sveltekit-superforms/adapters";
     import { slide } from "svelte/transition";
 
-    export let data: SuperValidated<Infer<typeof formSchema>>;
-    export let action: string;
+    let {
+        data,
+        action,
+    }: {
+        data: SuperValidated<Infer<typeof formSchema>>;
+        action: string;
+    } = $props();
 
     const form = superForm(data, {
         validators: zodClient(formSchema),

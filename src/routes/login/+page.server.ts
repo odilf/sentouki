@@ -1,8 +1,8 @@
 import { lucia } from "$lib/server/auth";
 import { db } from "$lib/server/db";
-import { users } from "$lib/server/db/schema";
+import { userTable } from "$lib/server/db/schema";
 import { fail, redirect } from "@sveltejs/kit";
-import { sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Argon2id } from "oslo/password";
 import { setError, superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
@@ -29,8 +29,8 @@ export const actions: Actions = {
 
 		const { data } = form;
 
-		const user = await db.query.users.findFirst({
-			where: sql`${users.username} = ${data.username}`,
+		const user = await db.query.userTable.findFirst({
+			where: eq(userTable.username, data.username),
 		});
 
 		if (!user) {
@@ -53,6 +53,7 @@ export const actions: Actions = {
 			...sessionCookie.attributes,
 		});
 
+		// TODO: Make it redirect to the page you were previously
 		throw redirect(302, "/");
 	},
 
@@ -68,6 +69,7 @@ export const actions: Actions = {
 			...sessionCookie.attributes,
 		});
 
+		// TODO: Maybe redirect to home?
 		redirect(302, "/login");
 	},
 };

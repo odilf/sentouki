@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let serverPath: string
+    let { serverPath }: { serverPath: string } = $props();
 </script>
 
 <object title={serverPath} class="h-screen w-full">

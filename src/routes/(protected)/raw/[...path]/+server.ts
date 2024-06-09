@@ -1,9 +1,8 @@
-import { ReadStream, createReadStream } from "fs";
-import { Readable } from "node:stream";
+import { type ReadStream, createReadStream } from "node:fs";
 import * as path from "$lib/fs/path.server";
 import { parseRange } from "@httpland/range-parser";
 import { error } from "@sveltejs/kit";
-import { lstat } from "fs/promises";
+import { lstat } from "node:fs/promises";
 import type { RequestHandler } from "./$types";
 
 async function* nodeStreamToIterator(stream: ReadStream) {

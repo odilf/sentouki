@@ -6,11 +6,13 @@ import {
 	FileTextIcon,
 	FolderIcon,
 	Heading1Icon,
-	type Icon,
 	VideoIcon,
 } from "lucide-svelte";
 import { type BundledLanguage, bundledLanguagesInfo } from "shiki";
+
 import type { ComponentType } from "svelte";
+type Component = ComponentType;
+
 import {
 	Binary,
 	CodeRenderer,
@@ -22,18 +24,22 @@ import {
 } from "./renderer";
 
 export const shikiLanguages = bundledLanguagesInfo.flatMap(
-	({ id, aliases }) => [id, ...(aliases ?? [])],
-) as BundledLanguage[];
+	({ id, aliases }) => [
+		id as BundledLanguage,
+		...((aliases as BundledLanguage[]) ?? []),
+	],
+);
 
 export const programmingLanguages = [
-	...shikiLanguages /* Add custom langs here */,
+	...shikiLanguages,
+	// Add custom languages here
 ];
 
 type RenderInfo = {
-	mimeTypes: string[] | ((givenMt: string) => boolean);
+	mimeTypes: string[] | ((givenMimeType: string) => boolean);
 	extensions: string[];
-	icon: ComponentType<Icon>;
-	component: ComponentType;
+	icon: Component; // TODO: Should be ComponentType<Icon>
+	component: Component;
 };
 
 export const renderers = {
@@ -113,7 +119,7 @@ export function getComponent(data: FullFiletype) {
 	return find(data)?.component ?? Unknown;
 }
 
-export function getIcon(data: FullFiletype): ComponentType<Icon> {
+export function getIcon(data: FullFiletype): Component {
 	if (data.mimeType === "inode/directory") {
 		return FolderIcon;
 	}

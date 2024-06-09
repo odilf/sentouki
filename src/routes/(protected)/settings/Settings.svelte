@@ -1,8 +1,8 @@
 <script lang="ts">
     import { enhance } from "$app/forms";
     import { FormButton } from "$lib/components/ui/form";
-    import type { User } from "lucia";
     import { Badge } from "$lib/components/ui/badge";
+    import type { User } from "$lib/server/auth";
 
     export let user: User;
 </script>

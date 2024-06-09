@@ -1,35 +1,40 @@
 <script lang="ts" context="module">
-    import { browser } from '$app/environment'
+    import { browser } from "$app/environment";
     import {
         getHighlighter,
         type BundledLanguage,
         type SpecialLanguage,
-    } from 'shiki'
+    } from "shiki";
 
     // TODO: Use dynamic fine grained import or something
     // https://shiki.style/guide/install#fine-grained-bundle
     const highlighter = await getHighlighter({
-        themes: ['ayu-dark'],
+        themes: ["ayu-dark"],
         langs: [], // All are loaded dynamically
-    })
-</script>
+    });
+    </script>
 
-<script lang="ts">
-    export let code: Promise<string>
-    export let lang: BundledLanguage | SpecialLanguage
-
-    async function getHtml(codePromise: Promise<string>) {
-        const code = await codePromise
-        await highlighter.loadLanguage(lang)
-        const file = highlighter.codeToHtml(code, {
+    <script lang="ts">
+        let {
+            code,
             lang,
-            theme: 'ayu-dark',
-        })
+        }: {
+            code: Promise<string>;
+            lang: BundledLanguage | SpecialLanguage;
+        } = $props();
 
-        return String(file)
-    }
+        async function getHtml(codePromise: Promise<string>) {
+            const code = await codePromise;
+            await highlighter.loadLanguage(lang);
+            const file = highlighter.codeToHtml(code, {
+                lang,
+                theme: "ayu-dark",
+            });
 
-    $: html = browser ? getHtml(code) : new Promise(() => null)
+            return String(file);
+        }
+
+        let html = $derived(browser ? getHtml(code) : new Promise(() => null));
 </script>
 
 <section class="text-sm">

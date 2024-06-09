@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
     import LoginForm from "./LoginForm.svelte";
 
-    export let data: PageData;
+    let { data } = $props();
 </script>
 
 <main class="mx-auto max-w-lg px-4 py-8">

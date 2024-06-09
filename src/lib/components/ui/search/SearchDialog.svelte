@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { Search } from '.'
-    import * as Dialog from '$lib/components/ui/dialog'
+import { Search } from ".";
+import * as Dialog from "$lib/components/ui/dialog";
 
-	let open = false;
+let open = false;
 </script>
 
 <Dialog.Root bind:open>

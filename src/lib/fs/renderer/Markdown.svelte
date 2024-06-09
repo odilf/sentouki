@@ -1,35 +1,35 @@
 <script lang="ts" context="module">
-    import { unified } from 'unified'
-    import remarkParse from 'remark-parse'
-    import remarkGfm from 'remark-gfm'
-    import remarkRehype from 'remark-rehype'
-    import rehypeStringify from 'rehype-stringify'
-    import rehypeShiki from '@shikijs/rehype'
+    import { unified } from "unified";
+    import remarkParse from "remark-parse";
+    import remarkGfm from "remark-gfm";
+    import remarkRehype from "remark-rehype";
+    import rehypeStringify from "rehype-stringify";
+    import rehypeShiki from "@shikijs/rehype";
 
     const processor = unified()
         .use(remarkParse)
         .use(remarkGfm)
         .use(remarkRehype)
         .use(rehypeShiki, {
-            theme: 'ayu-dark',
+            theme: "ayu-dark",
         })
-        .use(rehypeStringify)
-</script>
+        .use(rehypeStringify);
+    </script>
 
-<script lang="ts">
-    import { browser } from '$app/environment'
+    <script lang="ts">
+        import { browser } from '$app/environment'
 
-    export let serverPath: string
+        let { serverPath }: { serverPath: string } = $props();
 
-    async function getHtml(serverPath: string) {
-        const response = await fetch(serverPath)
-        const content = await response.text()
-        const file = await processor.process(content)
+        async function getHtml(serverPath: string) {
+            const response = await fetch(serverPath)
+            const content = await response.text()
+            const file = await processor.process(content)
 
-        return String(file)
-    }
+            return String(file)
+        }
 
-    let html = browser ? getHtml(serverPath) : new Promise(() => null)
+        let html = browser ? getHtml(serverPath) : new Promise(() => null)
 </script>
 
 <!--

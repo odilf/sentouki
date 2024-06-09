@@ -1,5 +1,5 @@
 <script lang="ts">
-    export let serverPath: string
+    let { serverPath }: { serverPath: string } = $props();
 </script>
 
 <img src={serverPath} alt={serverPath} />

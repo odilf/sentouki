@@ -1,9 +1,10 @@
 <script lang="ts">
     import * as Table from "$lib/components/ui/table";
+
     import Child from "./Child.svelte";
     import type { FileData } from "$lib/fs/file";
 
-    export let children: FileData[];
+    let { children }: { children: FileData[] } = $props();
 </script>
 
 <Table.Root>
