@@ -22,7 +22,9 @@ export function getPathsFromPathComponents(pathComponents: string[]) {
 }
 
 export function getPathsFromParams(params: { path: string }) {
-	const pathComponents = params.path.split("/").filter(Boolean);
+	const decoded = decodeURIComponent(params.path);
+	console.log(decoded);
+	const pathComponents = decoded.split("/").filter(Boolean);
 
 	return { pathComponents };
 }
