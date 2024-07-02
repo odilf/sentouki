@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const userTable = sqliteTable("user", {
 	id: text("id").primaryKey(),
@@ -21,11 +21,16 @@ export const fileTable = sqliteTable("file_cache", {
 	name: text("name").notNull(),
 	path: text("path").notNull().primaryKey(),
 	mimeType: text("mime_type").notNull(),
-	dateStart: integer("date_start", { mode: "timestamp" }).notNull(),
-	dateEnd: integer("date_end", { mode: "timestamp" }).notNull(),
+	dateStart: integer("date_start", { mode: "timestamp" }),
+	dateEnd: integer("date_end", { mode: "timestamp" }),
+	dateCached: integer("date_cached", { mode: "timestamp" }).notNull(),
 	size: integer("size").notNull(),
-	parent: text("parent_path").notNull(),
-});
+	parent: text("parent_path"),
+	hash: text("hash").notNull(),
+}, (table) => ({
+		pathIdx: index("path_idx").on(table.path),
+		typeIdx: index("type_idx").on(table.path),
+}));
 
 export const filesRelations = relations(fileTable, ({ one, many }) => ({
 	parent: one(fileTable, {
