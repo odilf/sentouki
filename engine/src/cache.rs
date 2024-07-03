@@ -23,7 +23,7 @@ pub struct Options {
 
 impl Options {
     pub fn ignore_dotfiles(&self) -> bool {
-        self.include_dotfiles.unwrap_or(false)
+        !self.include_dotfiles.unwrap_or(false)
     }
 }
 
