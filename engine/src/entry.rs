@@ -64,7 +64,7 @@ pub struct Entry<H = String> {
 /// Gets the [MIME type](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
 /// of the path, using the [`file`](https://man7.org/linux/man-pages/man1/file.1.html) command.
 async fn mime_type(path: &Path) -> eyre::Result<String> {
-    tracing::debug!(?path, "getting mime type");
+    tracing::trace!(?path, "getting mime type");
 
     // One might think using `tokio::process` is better, but that makes it so that there are too
     // many files opened at once. Either way, it is sufficiently fast where the overhead of async
@@ -104,7 +104,7 @@ impl Entry {
     /// It returns `Err` only if something unexpected goes
     /// wrong. If the path has a directory it returns `Ok(None)`.
     pub async fn from_file(path: &Path) -> eyre::Result<Option<Self>> {
-        tracing::debug!(?path, "opening file");
+        tracing::trace!(?path, "opening file");
         if path.is_dir() {
             return Ok(None);
         }
@@ -256,7 +256,6 @@ impl Entry {
             )
         };
 
-        tracing::warn!("about to exectue!");
         query.execute(pool).await?;
 
         Ok(())
