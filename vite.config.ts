@@ -5,10 +5,10 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import { ViteFaviconsPlugin } from "vite-plugin-favicon2";
 
 export default defineConfig({
-	plugins: [
-		ViteFaviconsPlugin("./static/favicon.svg"),
-		vidstack({ include: /player\// }),
-		topLevelAwait({}),
-		sveltekit(),
-	],
+    plugins: [
+        ViteFaviconsPlugin("./static/favicon.svg"),
+        vidstack({ include: /player\// }),
+        topLevelAwait({}),
+        sveltekit(),
+    ],
 });

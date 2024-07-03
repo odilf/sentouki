@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+    import type { FiletypeValidators } from "$lib/file/filetypes";
+    export const filetypes: FiletypeValidators = {
+        mimeTypes: ["application/octet-stream"],
+    };
+</script>
+
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
 

@@ -1,13 +1,17 @@
 <script lang="ts">
     import { ArrowBigLeft } from "lucide-svelte";
-    import * as ft from "$lib/fs/filetypes.svelte";
-    import type { FileData } from "$lib/fs/file";
-    import * as path from "$lib/fs/path";
+    // import * as ft from "$lib/file/filetypes.svelte";
+    // import type { FileData } from "$lib/fs/file";
+    // import * as path from "$lib/fs/path";
+    // import type { fileTable } from "$lib/server/db/schema";
 
-    let { data }: { data: FileData } = $props();
+    import type { File } from "$lib/file";
+    import { getRenderer } from "$lib/file/renderer";
+    let { data }: { data: File } = $props();
 
-    let serverPath = $derived(path.getServerRaw(data.path));
-    let renderer = $derived(ft.getComponent(data));
+    let serverPath = $derived(
+        `/raw/${data.path}`.split("/").map(encodeURIComponent).join("/")
+    );
 </script>
 
 <main class="mx-auto min-h-[100dvh] max-w-6xl px-4 py-8">
@@ -18,5 +22,5 @@
         {data.name}
     </h1>
 
-    <svelte:component this={renderer} {serverPath} />
+    <svelte:component this={getRenderer(data.filetype)} {serverPath} />
 </main>

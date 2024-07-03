@@ -19,6 +19,7 @@
 <svelte:window
     on:keydown={(e) => {
         if (e.code === "KeyK" && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault();
             open = !open;
         }
     }}

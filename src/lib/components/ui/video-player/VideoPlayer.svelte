@@ -1,58 +1,58 @@
 <script lang="ts">
-// Import styles.
-import "vidstack/player/styles/default/theme.css";
-import "vidstack/player/styles/default/layouts/audio.css";
-import "vidstack/player/styles/default/layouts/video.css";
+    // Import styles.
+    import "vidstack/player/styles/default/theme.css";
+    import "vidstack/player/styles/default/layouts/audio.css";
+    import "vidstack/player/styles/default/layouts/video.css";
 
-// Register elements.
-import "vidstack/player";
-import "vidstack/player/layouts";
-import "vidstack/player/ui";
+    // Register elements.
+    import "vidstack/player";
+    import "vidstack/player/layouts";
+    import "vidstack/player/ui";
 
-import { onMount } from "svelte";
-import {
-	isHLSProvider,
-	type MediaCanPlayEvent,
-	type MediaProviderChangeEvent,
-} from "vidstack";
-import type { MediaPlayerElement } from "vidstack/elements";
+    import { onMount } from "svelte";
+    import {
+        isHLSProvider,
+        type MediaCanPlayEvent,
+        type MediaProviderChangeEvent,
+    } from "vidstack";
+    import type { MediaPlayerElement } from "vidstack/elements";
 
-export let src: string;
+    export let src: string;
 
-let player: MediaPlayerElement;
+    let player: MediaPlayerElement;
 
-onMount(() => {
-	/**
-	 * You can add these tracks using HTML as well.
-	 *
-	 * @example
-	 * ```html
-	 * <media-provider>
-	 *   <track label="..." src="..." kind="..." srclang="..." default />
-	 *   <track label="..." src="..." kind="..." srclang="..." />
-	 * </media-provider>
-	 * ```
-	 */
-	// for (const track of textTracks) player.textTracks.add(track);
-	// Subscribe to state updates.
-	// return player.subscribe(({ paused, viewType }) => {
-	//     // console.log('is paused?', '->', paused);
-	//     // console.log('is audio view?', '->', viewType === 'audio');
-	// })
-});
+    onMount(() => {
+        /**
+         * You can add these tracks using HTML as well.
+         *
+         * @example
+         * ```html
+         * <media-provider>
+         *   <track label="..." src="..." kind="..." srclang="..." default />
+         *   <track label="..." src="..." kind="..." srclang="..." />
+         * </media-provider>
+         * ```
+         */
+        // for (const track of textTracks) player.textTracks.add(track);
+        // Subscribe to state updates.
+        // return player.subscribe(({ paused, viewType }) => {
+        //     // console.log('is paused?', '->', paused);
+        //     // console.log('is audio view?', '->', viewType === 'audio');
+        // })
+    });
 
-function onProviderChange(event: MediaProviderChangeEvent) {
-	const provider = event.detail;
-	// We can configure provider's here.
-	if (isHLSProvider(provider)) {
-		provider.config = {};
-	}
-}
+    function onProviderChange(event: MediaProviderChangeEvent) {
+        const provider = event.detail;
+        // We can configure provider's here.
+        if (isHLSProvider(provider)) {
+            provider.config = {};
+        }
+    }
 
-// We can listen for the `can-play` event to be notified when the player is ready.
-function onCanPlay(event: MediaCanPlayEvent) {
-	// ...
-}
+    // We can listen for the `can-play` event to be notified when the player is ready.
+    function onCanPlay(event: MediaCanPlayEvent) {
+        // ...
+    }
 </script>
 
 <media-player

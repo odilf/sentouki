@@ -1,31 +1,34 @@
 <script lang="ts">
     import { goto, preloadData } from "$app/navigation";
     import * as Table from "$lib/components/ui/table";
-    import * as ft from "$lib/fs/filetypes.svelte";
-    import * as path from "$lib/fs/path";
-    import type { FileData } from "$lib/fs/file";
-    import { displayDateRange } from "$lib/fs/date";
-    import { formatBytes } from "$lib/fs/size";
+    import type { File } from "$lib/file";
+    import { displayDateRange } from "$lib/file/date";
+    import { formatBytes } from "$lib/file/size";
+    import { getIcon } from "$lib/file/filetypes";
 
     let {
         data,
         index,
     }: {
-        data: FileData;
+        data: File;
         index: number;
     } = $props();
+
+    let browsePath = $derived(
+        `/browse/${data.path}`.split("/").map(encodeURIComponent).join("/")
+    );
 </script>
 
 <Table.Row
-    class="h-16 cursor-pointer"
-    on:click={() => goto(path.getServerBrowse(data.path))}
-    on:mouseover={() => preloadData(["browse", ...data.path].join("/"))}
+    class="h-fit cursor-pointer"
+    on:click={() => goto(browsePath)}
+    on:mouseover={() => preloadData(browsePath)}
 >
     <Table.Cell class="opacity-25">
         {index}
     </Table.Cell>
     <Table.Cell>
-        <svelte:component this={ft.getIcon(data)} class="h-10 w-10" />
+        <svelte:component this={getIcon(data.filetype)} class="h-10 w-10" />
     </Table.Cell>
     <Table.Cell class="font-medium">
         {data.name}
@@ -37,6 +40,6 @@
         {displayDateRange(data.date)}
     </Table.Cell>
     <Table.Cell>
-        {data.mimeType}
+        {data.filetype.mimeType}
     </Table.Cell>
 </Table.Row>

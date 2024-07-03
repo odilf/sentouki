@@ -2,9 +2,13 @@
     import * as Table from "$lib/components/ui/table";
 
     import Child from "./Child.svelte";
-    import type { FileData } from "$lib/fs/file";
+    import type { Directory } from "$lib/file";
 
-    let { children }: { children: FileData[] } = $props();
+    let {
+        data,
+    }: {
+        data: Directory;
+    } = $props();
 </script>
 
 <Table.Root>
@@ -20,7 +24,7 @@
     </Table.Header>
 
     <Table.Body>
-        {#each children as child, i}
+        {#each data.children as child, i}
             <Child data={child} index={i} />
         {/each}
     </Table.Body>

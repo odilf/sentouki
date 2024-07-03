@@ -4,7 +4,13 @@
     import { Badge } from "$lib/components/ui/badge";
     import type { User } from "$lib/server/auth";
 
-    export let user: User;
+    let {
+        user,
+        cacheSize,
+    }: {
+        user: User;
+        cacheSize: number;
+    } = $props();
 </script>
 
 <section class="mb-8">
@@ -19,18 +25,20 @@
     {/if}
 </section>
 
-<form method="post" use:enhance action="/login?/logout" class="mb-8">
+<form method="post" use:enhance action="/login?/logout" class="mb-12">
     <FormButton>Log out</FormButton>
 </form>
 
 {#if user.isAdmin}
-    <form
-        method="post"
-        use:enhance
-        action="?/populateCache"
-        class="rounded bg-zinc-900 p-4"
-    >
-        <h2 class="text-xl">Admin actions</h2>
+    <h2 class="text-3xl mb-2 font-semibold">Admin section</h2>
+    <form method="post" use:enhance action="?/populateCache" class="mb-2">
         <FormButton variant="destructive">Populate cache</FormButton>
     </form>
+
+    <form method="post" use:enhance action="?/deleteCache" class="mb-2">
+        <FormButton variant="destructive">Delete cache</FormButton>
+    </form>
+
+    <h3 class="text-2xl">Cache size</h3>
+    <p class="mb-2">Cache has {cacheSize} rows.</p>
 {/if}

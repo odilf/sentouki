@@ -1,16 +1,25 @@
-import { getPathsFromParams } from "$lib/fs/path.server";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { getFileData } from "$lib/fs/file.server";
+import { db } from "$lib/server/db";
+import { fileTable } from "$lib/server/db/schema";
+import { asc, eq } from "drizzle-orm";
+import { dbToTs } from "$lib/file";
 
-export const load = (async ({ params }) => {
-	const { pathComponents } = getPathsFromParams(params);
+export const load = (async ({ params: { path } }) => {
+    const entry = await db.query.fileTable.findFirst({
+        where: eq(fileTable.path, path),
+        with: {
+            children: {
+                orderBy: asc(fileTable.name),
+            },
+        },
+    });
 
-	const file = await getFileData(pathComponents);
+    if (entry === undefined) {
+        throw error(404, `Could not find file (${path})`);
+    }
 
-	if (file === null) {
-		throw error(404, `Could not find file (${params.path})`);
-	}
-
-	return { file };
+    return {
+        entry: dbToTs(entry),
+    };
 }) satisfies PageServerLoad;

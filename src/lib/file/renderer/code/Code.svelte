@@ -12,29 +12,29 @@
         themes: ["ayu-dark"],
         langs: [], // All are loaded dynamically
     });
-    </script>
+</script>
 
-    <script lang="ts">
-        let {
-            code,
+<script lang="ts">
+    let {
+        code,
+        lang,
+    }: {
+        code: Promise<string>;
+        lang: BundledLanguage | SpecialLanguage;
+    } = $props();
+
+    async function getHtml(codePromise: Promise<string>) {
+        const code = await codePromise;
+        await highlighter.loadLanguage(lang);
+        const file = highlighter.codeToHtml(code, {
             lang,
-        }: {
-            code: Promise<string>;
-            lang: BundledLanguage | SpecialLanguage;
-        } = $props();
+            theme: "ayu-dark",
+        });
 
-        async function getHtml(codePromise: Promise<string>) {
-            const code = await codePromise;
-            await highlighter.loadLanguage(lang);
-            const file = highlighter.codeToHtml(code, {
-                lang,
-                theme: "ayu-dark",
-            });
+        return String(file);
+    }
 
-            return String(file);
-        }
-
-        let html = $derived(browser ? getHtml(code) : new Promise(() => null));
+    let html = $derived(browser ? getHtml(code) : new Promise(() => null));
 </script>
 
 <section class="text-sm">

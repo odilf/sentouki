@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+    import type { FiletypeValidators } from "../filetypes";
+    export const filetypes: FiletypeValidators = {
+        extensions: ["pdf", "obj"],
+    };
+</script>
+
 <script lang="ts">
     let { serverPath }: { serverPath: string } = $props();
 </script>

@@ -1,4 +1,9 @@
 <script lang="ts" context="module">
+    import type { FiletypeValidators } from "../filetypes";
+    export const filetypes: FiletypeValidators = {
+        extensions: ["md", "markdown"],
+    };
+
     import { unified } from "unified";
     import remarkParse from "remark-parse";
     import remarkGfm from "remark-gfm";
@@ -14,22 +19,22 @@
             theme: "ayu-dark",
         })
         .use(rehypeStringify);
-    </script>
+</script>
 
-    <script lang="ts">
-        import { browser } from '$app/environment'
+<script lang="ts">
+    import { browser } from "$app/environment";
 
-        let { serverPath }: { serverPath: string } = $props();
+    let { serverPath }: { serverPath: string } = $props();
 
-        async function getHtml(serverPath: string) {
-            const response = await fetch(serverPath)
-            const content = await response.text()
-            const file = await processor.process(content)
+    async function getHtml(serverPath: string) {
+        const response = await fetch(serverPath);
+        const content = await response.text();
+        const file = await processor.process(content);
 
-            return String(file)
-        }
+        return String(file);
+    }
 
-        let html = browser ? getHtml(serverPath) : new Promise(() => null)
+    let html = browser ? getHtml(serverPath) : new Promise(() => null);
 </script>
 
 <!--

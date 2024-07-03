@@ -5,8 +5,8 @@
     let { data } = $props();
 </script>
 
-{#if "children" in data.file}
-    <Directory children={data.file.children} />
+{#if data.entry.type === "directory"}
+    <Directory data={data.entry} />
 {:else}
-    <File data={data.file} />
+    <File data={data.entry} />
 {/if}

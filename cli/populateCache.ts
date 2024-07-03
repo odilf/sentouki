@@ -11,14 +11,14 @@ logger.debug("test");
 exit();
 
 const confirmed = await confirm({
-	message: `About to populate ${pathComponents.join(
-		"/",
-	)}. This might take a while. Are you sure you want to proceed?`,
+    message: `About to populate ${pathComponents.join(
+        "/"
+    )}. This might take a while. Are you sure you want to proceed?`,
 });
 
 if (!confirmed) {
-	outro("Bailing");
-	exit();
+    outro("Bailing");
+    exit();
 }
 
 logger.info("Starting");
