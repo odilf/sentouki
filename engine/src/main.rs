@@ -1,16 +1,20 @@
 use clap::Parser;
 use color_eyre::eyre;
-use tracing_subscriber::{fmt, prelude::*, EnvFilter};
+use tracing_subscriber::EnvFilter;
 
 use sentouki_engine::{cache, Options};
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
-    let subscriber = tracing_subscriber::registry()
-        .with(fmt::layer())
-        .with(EnvFilter::from_default_env());
+    let file_appender = tracing_appender::rolling::daily("./logs", "sentouki.log");
 
-    tracing::subscriber::set_global_default(subscriber)?;
+    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+
+    tracing_subscriber::fmt()
+        .json()
+        .with_writer(non_blocking)
+        .with_env_filter(EnvFilter::from_default_env())
+        .init();
 
     let options = Options::try_parse()?;
 
