@@ -3,11 +3,14 @@ use std::{
     hash::{DefaultHasher, Hash, Hasher as _},
     path::{Path, PathBuf},
     process::Output,
+    sync::Arc,
 };
 
 use color_eyre::eyre::{self, ContextCompat as _};
 use sqlx::{sqlite::SqliteRow, Row, SqlitePool};
 use time::OffsetDateTime;
+
+use crate::Options;
 
 #[derive(Debug, Clone, Hash)]
 pub struct DateRange {
@@ -165,28 +168,29 @@ impl Entry {
     /// Caches the file in the database.
     ///
     /// It uses [`OffsetDateTime::now_utc`] to store the time of the caching in the db.
-    pub async fn cache(&self, pool: &SqlitePool) -> eyre::Result<()> {
+    pub async fn cache(&self, pool: &SqlitePool, options: Arc<Options>) -> eyre::Result<()> {
         let name = self
             .path
             .file_name()
             .wrap_err("Can't find name of file {self.path:?}")?
             .to_string_lossy();
-        let path = self.path.to_string_lossy();
-        let parent = self
-            .path
-            .parent()
-            .wrap_err("Parent couldn't be found because path is root")?
-            .to_string_lossy();
 
-        let date_start = self.date.start();
-        let date_end = self.date.end();
+        let prefixed_path = self.path.strip_prefix(options.root.to_owned())?;
+        let path = prefixed_path.to_string_lossy();
+
+        let parent = prefixed_path
+            .parent()
+            .map(|parent| parent.to_string_lossy());
+
+        let date_start = self.date.start().map(|d| d.unix_timestamp());
+        let date_end = self.date.end().map(|d| d.unix_timestamp());
 
         tracing::trace!(?path, ?self, "caching file");
 
         // Delete the file if it already exists, to update it
-        // TODO: Look into just doing one update instead of deleting. 
+        // TODO: Look into just doing one update instead of deleting.
         // I think it might be the same because you either do DELETE and INSERT or SELECT and
-        // UPDATE. So it might not be more efficient. But I'm not sure. 
+        // UPDATE. So it might not be more efficient. But I'm not sure.
         sqlx::query!(
             r"
                 DELETE FROM file_cache
@@ -199,7 +203,7 @@ impl Entry {
 
         // TODO: Maybe make it `now_local`, but that has errors involved which
         // need to be handled correctly.
-        let now = OffsetDateTime::now_utc();
+        let now = OffsetDateTime::now_utc().unix_timestamp();
 
         sqlx::query!(
             r"
