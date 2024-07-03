@@ -6,7 +6,7 @@ use sentouki_engine::{cache, Options};
 
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
-    let file_appender = tracing_appender::rolling::daily("./logs", "sentouki.log");
+    let file_appender = tracing_appender::rolling::hourly("./logs", "sentouki.log");
 
     let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
 
