@@ -12,13 +12,13 @@ use time::OffsetDateTime;
 
 use crate::Options;
 
-#[derive(Debug, Clone, Hash)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct DateRange {
     pub start: OffsetDateTime,
     pub end: OffsetDateTime,
 }
 
-#[derive(Debug, Clone, Hash)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub enum Date {
     Range(DateRange),
     Single(OffsetDateTime),
@@ -52,7 +52,7 @@ impl Date {
 ///
 /// We have a generic `H` parameter, so that we can initialize it without a hash and
 /// then hash it, using [`Entry::hashed`].
-#[derive(Debug, Clone, Hash)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct Entry<H = String> {
     pub path: PathBuf,
     pub size: i64,
@@ -169,14 +169,39 @@ impl Entry {
     ///
     /// It uses [`OffsetDateTime::now_utc`] to store the time of the caching in the db.
     pub async fn cache(&self, pool: &SqlitePool, options: Arc<Options>) -> eyre::Result<()> {
+        let prefixed_path = self.path.strip_prefix(options.root.to_owned())?;
+        let path = prefixed_path.to_string_lossy();
+
+        tracing::debug!(?path, ?self, "caching file");
+
+        // Check if files already exists
+        let db_entry: Option<Entry> = sqlx::query_as(
+            r"
+                SELECT * FROM file_cache
+                WHERE path = $1;
+            ",
+        )
+        .bind(&path)
+        .fetch_optional(pool)
+        .await?;
+
+        let update;
+        if let Some(db_entry) = db_entry {
+            if db_entry == *self {
+                tracing::debug!(?path, "Already cached");
+                return Ok(());
+            }
+
+            update = true;
+        } else {
+            update = false;
+        }
+
         let name = self
             .path
             .file_name()
             .wrap_err("Can't find name of file {self.path:?}")?
             .to_string_lossy();
-
-        let prefixed_path = self.path.strip_prefix(options.root.to_owned())?;
-        let path = prefixed_path.to_string_lossy();
 
         let parent = prefixed_path
             .parent()
@@ -185,44 +210,54 @@ impl Entry {
         let date_start = self.date.start().map(|d| d.unix_timestamp());
         let date_end = self.date.end().map(|d| d.unix_timestamp());
 
-        tracing::trace!(?path, ?self, "caching file");
-
-        // Delete the file if it already exists, to update it
-        // TODO: Look into just doing one update instead of deleting.
-        // I think it might be the same because you either do DELETE and INSERT or SELECT and
-        // UPDATE. So it might not be more efficient. But I'm not sure.
-        sqlx::query!(
-            r"
-                DELETE FROM file_cache
-                WHERE path = $1;
-            ",
-            path,
-        )
-        .execute(pool)
-        .await?;
-
         // TODO: Maybe make it `now_local`, but that has errors involved which
         // need to be handled correctly.
         let now = OffsetDateTime::now_utc().unix_timestamp();
 
-        sqlx::query!(
-            r"
+        let query = if update {
+            tracing::trace!("Updating");
+            sqlx::query!(
+                r"
+                UPDATE file_cache
+                SET name = $1, size = $3, mime_type = $4, date_start = $5, 
+                    date_end = $6, hash = $7, parent_path = $8, date_cached = $9
+                WHERE path = $2;
+            ",
+                name,
+                path,
+                self.size,
+                self.mime_type,
+                date_start,
+                date_end,
+                self.hash,
+                parent,
+                now,
+            )
+        } else {
+            tracing::trace!("Inserting");
+            sqlx::query!(
+                r"
                 INSERT 
-                INTO file_cache (name, path, size, mime_type, date_start, date_end, hash, parent_path, date_cached) 
+                INTO file_cache (
+                    name, path, size, mime_type, date_start,
+                    date_end, hash, parent_path, date_cached
+                ) 
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
             ",
-            name,
-            path,
-            self.size,
-            self.mime_type,
-            date_start,
-            date_end,
-            self.hash,
-            parent,
-            now,
-        )
-        .execute(pool)
-        .await?;
+                name,
+                path,
+                self.size,
+                self.mime_type,
+                date_start,
+                date_end,
+                self.hash,
+                parent,
+                now,
+            )
+        };
+
+        tracing::warn!("about to exectue!");
+        query.execute(pool).await?;
 
         Ok(())
     }
