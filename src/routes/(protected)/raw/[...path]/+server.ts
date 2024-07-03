@@ -3,7 +3,7 @@ import { parseRange } from "@httpland/range-parser";
 import { error } from "@sveltejs/kit";
 import { lstat } from "node:fs/promises";
 import type { RequestHandler } from "./$types";
-import { BASE_PATH } from "$env/static/private";
+import { base } from "$lib/file/path";
 
 async function* nodeStreamToIterator(stream: ReadStream) {
     for await (const chunk of stream) {
@@ -26,7 +26,7 @@ function iteratorToStream<T>(iterator: AsyncGenerator<T>) {
 }
 
 export const GET: RequestHandler = async ({ params, request }) => {
-    const fsPath = `${BASE_PATH}/${params.path}`;
+    const fsPath = `${base}/${params.path}`;
 
     try {
         const stats = await lstat(fsPath);

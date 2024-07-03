@@ -2,7 +2,7 @@ import { logger } from "$lib/logger";
 import { exec as execNode } from "node:child_process";
 import type { Actions, PageServerLoad } from "./$types";
 import { promisify } from "node:util";
-import { BASE_PATH } from "$env/static/private";
+import { base } from "$lib/file/path";
 import { db } from "$lib/server/db";
 import { count } from "drizzle-orm";
 import { fileTable } from "$lib/server/db/schema";
@@ -25,7 +25,7 @@ export const actions: Actions = {
         logger.debug("Showing debug messages");
 
         const promise = exec(
-            `cd engine && cargo run --release -- ${BASE_PATH}`
+            `cd engine && cargo run --release -- ${base}`
         );
 
         promise.child.stdout?.on("data", (data) => {
