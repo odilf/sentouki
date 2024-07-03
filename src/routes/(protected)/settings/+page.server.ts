@@ -22,9 +22,10 @@ const exec = promisify(execNode);
 export const actions: Actions = {
     populateCache: async () => {
         logger.info("Populating cache");
+        logger.debug("Showing debug messages");
 
         const promise = exec(
-            `cd engine && RUST_LOG=sentouki_engine cargo run --release -- ${BASE_PATH}`
+            `cd engine && cargo run --release -- ${BASE_PATH}`
         );
 
         promise.child.stdout?.on("data", (data) => {
