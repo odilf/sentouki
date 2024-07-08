@@ -1,5 +1,5 @@
-# UOH File Browser
+# sentouki
 
-File browser for the UOH files.
+σεντούκι - Web file browser for self hosting
 
-TODO: Expand readme.
+This is part of the UOH project. 
