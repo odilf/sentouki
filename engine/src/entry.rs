@@ -140,7 +140,7 @@ impl Entry {
         let result = Entry {
             path: path.to_owned(),
             size,
-            mime_type: "directory".to_string(),
+            mime_type: "inode/directory".to_string(), // This is kind of cheating
             date,
             hash: (),
         };
@@ -154,7 +154,7 @@ impl Entry {
     /// is an error when fetching the database.
     pub async fn from_database(path: &Path, pool: SqlitePool) -> eyre::Result<Option<Self>> {
         let entry: Option<Entry> = sqlx::query_as("SELECT * FROM file_cache WHERE path = $1;")
-            .bind(path.to_str().wrap_err("Found not valid UTF-8 in path")?)
+            .bind(path.to_str().wrap_err("Probably found not valid UTF-8 in path")?)
             .fetch_optional(&pool)
             .await?;
 
@@ -218,11 +218,11 @@ impl Entry {
             tracing::trace!("Updating");
             sqlx::query!(
                 r"
-                UPDATE file_cache
-                SET name = $1, size = $3, mime_type = $4, date_start = $5, 
-                    date_end = $6, hash = $7, parent_path = $8, date_cached = $9
-                WHERE path = $2;
-            ",
+                    UPDATE file_cache
+                    SET name = $1, size = $3, mime_type = $4, date_start = $5, 
+                        date_end = $6, hash = $7, parent_path = $8, date_cached = $9
+                    WHERE path = $2;
+                ",
                 name,
                 path,
                 self.size,
@@ -237,13 +237,13 @@ impl Entry {
             tracing::trace!("Inserting");
             sqlx::query!(
                 r"
-                INSERT 
-                INTO file_cache (
-                    name, path, size, mime_type, date_start,
-                    date_end, hash, parent_path, date_cached
-                ) 
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
-            ",
+                    INSERT 
+                    INTO file_cache (
+                        name, path, size, mime_type, date_start,
+                        date_end, hash, parent_path, date_cached
+                    ) 
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+                ",
                 name,
                 path,
                 self.size,
