@@ -3,7 +3,7 @@ import type { FsFile } from "./types";
 import { execFile as execFileCallback } from "node:child_process";
 import { promisify } from "node:util";
 import { unwrap } from "$lib/utils";
-import { base } from "./path";
+import { base, toFsPath } from "./path";
 
 const execFile = promisify(execFileCallback);
 
@@ -33,7 +33,7 @@ export const readdirSafe = makeSafe(
 );
 
 export async function getFilesystemData(path: string): Promise<FsFile | null> {
-    const fsPath = `${base}/${path}`;
+    const fsPath = toFsPath(path);
     const name = fsPath.split("/").at(-1) ?? "";
     const extension = name.split(".").at(-1) ?? "";
 
@@ -58,7 +58,7 @@ export async function getFilesystemData(path: string): Promise<FsFile | null> {
 export async function getChildrenData(
     path: string
 ): Promise<Promise<FsFile>[] | null> {
-    const fsPath = `${base}/${path}`;
+    const fsPath = toFsPath(path);
     const children = await readdirSafe(fsPath);
     if (children === null) {
         return null;
