@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto, preloadData } from "$app/navigation";
     import * as Table from "$lib/components/ui/table";
-    import type { File } from "$lib/file";
+    import type { DbFile, File } from "$lib/file/types";
     import { displayDateRange } from "$lib/file/date";
     import { formatBytes } from "$lib/file/size";
     import { getIcon } from "$lib/file/filetypes";
@@ -34,10 +34,10 @@
         {data.name}
     </Table.Cell>
     <Table.Cell>
-        {formatBytes(data.size)}
+        {data.source === "db" ? formatBytes(data.size) : "-"}
     </Table.Cell>
     <Table.Cell>
-        {displayDateRange(data.date)}
+        {data.source === "db" ? displayDateRange(data.date) : "-"}
     </Table.Cell>
     <Table.Cell>
         {data.filetype.mimeType}

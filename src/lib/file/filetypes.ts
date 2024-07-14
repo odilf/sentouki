@@ -10,7 +10,7 @@ import {
 } from "lucide-svelte";
 
 import type { Component } from "svelte";
-import type { Filetype } from ".";
+import type { Filetype } from "./types";
 
 import { type BundledLanguage, bundledLanguagesInfo } from "shiki";
 import { unwrap } from "$lib/utils";
@@ -107,7 +107,7 @@ export function filetypesOf(
 }
 
 export function getIcon(filetype: Filetype): Component {
-    if (filetype.mimeType === "directory") {
+    if (filetype.mimeType === "inode/directory") {
         return FolderIcon;
     }
 

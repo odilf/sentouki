@@ -5,12 +5,17 @@
     // import * as path from "$lib/fs/path";
     // import type { fileTable } from "$lib/server/db/schema";
 
-    import type { File } from "$lib/file";
+    import type { File } from "$lib/file/types";
     import { getRenderer } from "$lib/file/renderer";
-    let { data }: { data: File } = $props();
+
+    let {
+        file,
+    }: {
+        file: File;
+    } = $props();
 
     let serverPath = $derived(
-        `/raw/${data.path}`.split("/").map(encodeURIComponent).join("/")
+        `/raw/${file.path}`.split("/").map(encodeURIComponent).join("/")
     );
 </script>
 
@@ -19,8 +24,8 @@
         <a href="./">
             <ArrowBigLeft class="left-0 mr-2 h-9 w-9" />
         </a>
-        {data.name}
+        {file.name}
     </h1>
 
-    <svelte:component this={getRenderer(data.filetype)} {serverPath} />
+    <svelte:component this={getRenderer(file.filetype)} {serverPath} />
 </main>

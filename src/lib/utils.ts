@@ -79,3 +79,12 @@ export function unwrap<T>(
 export function todo(message = "Not implemented"): never {
     throw new Error(message);
 }
+
+/**
+ * Creates a promise that rejects after a certain amount of time.
+ *
+ * Useful for doing, e.g., `Promise.race([somePromise, delay(200)])`.
+ */
+export function delayReject(ms: number): Promise<void> {
+    return new Promise((_, reject) => setTimeout(reject, ms));
+}

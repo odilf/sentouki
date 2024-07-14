@@ -5,8 +5,10 @@
     let { data } = $props();
 </script>
 
-{#if data.entry.type === "directory"}
-    <Directory data={data.entry} />
+<!-- {JSON.stringify(data)} -->
+
+{#if data.file.filetype.mimeType === "inode/directory"}
+    <Directory file={data.file} children={data.children} />
 {:else}
-    <File data={data.entry} />
+    <File file={data.file} />
 {/if}

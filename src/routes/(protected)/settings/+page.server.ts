@@ -24,9 +24,7 @@ export const actions: Actions = {
         logger.info("Populating cache");
         logger.debug("Showing debug messages");
 
-        const promise = exec(
-            `cd engine && cargo run --release -- ${base}`
-        );
+        const promise = exec(`cd engine && cargo run --release -- ${base}`);
 
         promise.child.stdout?.on("data", (data) => {
             logger.debug(data);

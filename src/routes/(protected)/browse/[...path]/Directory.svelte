@@ -2,12 +2,17 @@
     import * as Table from "$lib/components/ui/table";
 
     import Child from "./Child.svelte";
-    import type { Directory } from "$lib/file";
+    import type { DbFile, File, FsFile } from "$lib/file/types";
 
     let {
-        data,
+        file,
+        children,
     }: {
-        data: Directory;
+        file: File;
+        children: {
+            db: DbFile[];
+            fs: Promise<FsFile>[];
+        };
     } = $props();
 </script>
 
@@ -24,8 +29,14 @@
     </Table.Header>
 
     <Table.Body>
-        {#each data.children as child, i}
-            <Child data={child} index={i} />
+        {#each children.db as child, i}
+            <Child data={{ ...child, source: "db" }} index={i} />
+        {/each}
+
+        {#each children.fs as child, i}
+            {#await child then child}
+                <Child data={{ ...child, source: "filesystem" }} index={i} />
+            {/await}
         {/each}
     </Table.Body>
 </Table.Root>
