@@ -7,8 +7,9 @@
 
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
+    import type { Props } from ".";
 
-    let { serverPath }: { serverPath: string } = $props();
+    let { serverPath }: Props = $props();
 
     async function getStream(serverPath: string) {
         const response = await fetch(serverPath);

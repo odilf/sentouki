@@ -22,9 +22,10 @@
 </script>
 
 <script lang="ts">
+    import type { Props } from ".";
     import { browser } from "$app/environment";
 
-    let { serverPath }: { serverPath: string } = $props();
+    let { serverPath }: Props = $props();
 
     async function getHtml(serverPath: string) {
         const response = await fetch(serverPath);

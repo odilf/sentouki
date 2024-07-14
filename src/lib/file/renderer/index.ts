@@ -1,5 +1,6 @@
 import type { Component } from "svelte";
-import type { Filetype } from "..";
+import type { Filetype } from "../types";
+import { validateFiletype, type FiletypeValidators } from "../filetypes";
 
 import * as binary from "./Binary.svelte";
 import * as code from "./code/CodeRenderer.svelte";
@@ -8,7 +9,6 @@ import * as markdown from "./Markdown.svelte";
 import * as objectFullScreen from "./ObjectFullScreen.svelte";
 import * as unknown from "./Unknown.svelte";
 import * as video from "./Video.svelte";
-import { validateFiletype, type FiletypeValidators } from "../filetypes";
 
 export type RendererBundle = {
     default: Renderer;
@@ -25,7 +25,8 @@ export const renderers: RendererBundle[] = [
     unknown,
 ];
 
-export type Renderer = Component<{ serverPath: string }>;
+export type Props = { serverPath: string };
+export type Renderer = Component<Props>;
 
 export function getRenderer(filetype: Filetype): Renderer {
     for (const bundle of renderers) {
