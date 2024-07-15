@@ -1,19 +1,19 @@
 <script lang="ts">
-import { Button } from "$lib/components/ui/button";
-import * as Menubar from "$lib/components/ui/menubar";
-import { displayDateRange } from "$lib/file/date";
-import { formatBytes } from "$lib/file/size";
-import type { File } from "$lib/file/types";
-import type { User } from "lucia";
-import { UserIcon } from "lucide-svelte";
+    import { Button } from "$lib/components/ui/button";
+    import * as Menubar from "$lib/components/ui/menubar";
+    import { displayDateRange } from "$lib/file/date";
+    import { formatBytes } from "$lib/file/size";
+    import type { File } from "$lib/file/types";
+    import type { User } from "lucia";
+    import { UserIcon } from "lucide-svelte";
 
-let {
-	user,
-	file,
-}: {
-	user: User | null;
-	file: File | null;
-} = $props();
+    let {
+        user,
+        file,
+    }: {
+        user: User | null;
+        file: File | null;
+    } = $props();
 </script>
 
 <Menubar.Root
@@ -43,7 +43,7 @@ let {
                 </div>
             {/if}
         </div>
-        <div class="opacity-50 font-bold text-center">sentouki</div>
+        <a class="opacity-50 font-bold text-center" href="/">sentouki</a>
         <div class="flex-1 text-right overflow-hidden">
             <Button href="/settings" variant="ghost" class="mx-0">
                 <span>
