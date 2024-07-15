@@ -5,7 +5,7 @@
     let { data } = $props();
 </script>
 
-<main class="mx-auto grid h-screen content-center gap-8">
+<main class="mx-auto grid h-full content-center gap-8">
     <div class="mx-auto flex w-fit items-center gap-[1vw]">
         <Folder
             class="aspect-square h-20 w-20 lg:h-52 lg:w-52"
@@ -19,13 +19,13 @@
     <div class="mx-auto flex gap-4">
         {#if data.user}
             <Button class="py-6 text-xl" variant="default" size="lg">
-                <a href="/browse" data-sveltekit-preload-code="eager">
+                <a href="/browse" data-sveltekit-preload-data="eager">
                     Browse
                 </a>
             </Button>
 
             <Button class="py-6 text-xl" variant="secondary" size="lg">
-                <a href="/settings"> Settings </a>
+                <a href="/search"> Search </a>
             </Button>
         {:else}
             <Button class="py-6 text-xl" variant="default" size="lg">

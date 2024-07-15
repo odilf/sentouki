@@ -20,7 +20,7 @@
     <Table.Header class="sticky top-0">
         <Table.Row class="sticky top-0">
             <Table.Head class="w-[20px]"><!-- Index --></Table.Head>
-            <Table.Head class="w-[100px]">Type</Table.Head>
+            <Table.Head class="w-[100px]"><!-- Type --></Table.Head>
             <Table.Head>Name</Table.Head>
             <Table.Head>Size</Table.Head>
             <Table.Head>Date</Table.Head>

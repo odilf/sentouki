@@ -20,12 +20,5 @@
 </script>
 
 <main class="mx-auto min-h-[100dvh] max-w-6xl px-4 py-8">
-    <h1 class="relative mb-8 flex items-center text-4xl font-bold">
-        <a href="./">
-            <ArrowBigLeft class="left-0 mr-2 h-9 w-9" />
-        </a>
-        {file.name}
-    </h1>
-
     <svelte:component this={getRenderer(file.filetype)} {serverPath} />
 </main>
