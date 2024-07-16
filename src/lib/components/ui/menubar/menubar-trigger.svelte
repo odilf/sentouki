@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Menubar as MenubarPrimitive } from "bits-ui";
+    import { Menubar as MenubarPrimitive } from "bits-ui";
     import { cn } from "$lib/utils.js";
 
     type $$Props = MenubarPrimitive.TriggerProps;

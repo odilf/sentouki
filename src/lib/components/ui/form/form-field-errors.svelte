@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type * as FormPrimitive from "formsnap";
+    import * as FormPrimitive from "formsnap";
     import { cn } from "$lib/utils.js";
 
     type $$Props = FormPrimitive.FieldErrorsProps & {

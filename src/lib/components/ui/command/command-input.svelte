@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Command as CommandPrimitive } from "cmdk-sv";
+    import { Command as CommandPrimitive } from "cmdk-sv";
     import Search from "lucide-svelte/icons/search";
     import { cn } from "$lib/utils.js";
 

@@ -4,6 +4,7 @@ import { execFile as execFileCallback } from "node:child_process";
 import { promisify } from "node:util";
 import { unwrap } from "$lib/utils";
 import { base, toFsPath } from "./path";
+import { join } from "node:path";
 
 const execFile = promisify(execFileCallback);
 
@@ -64,8 +65,8 @@ export async function getChildrenData(
         return null;
     }
 
-    return children.map(async (name) => {
-        const childPath = `${path}/${name}`;
+    return children.map(async (childName) => {
+        const childPath = join(path, childName);
 
         return unwrap(
             await getFilesystemData(childPath),

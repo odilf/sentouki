@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Menubar as MenubarPrimitive } from "bits-ui";
+    import { Menubar as MenubarPrimitive } from "bits-ui";
     import ChevronRight from "lucide-svelte/icons/chevron-right";
     import { cn } from "$lib/utils.js";
 

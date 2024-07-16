@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
+    import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
     import { cn, flyAndScale } from "$lib/utils.js";
 
     type $$Props = DropdownMenuPrimitive.SubContentProps;
