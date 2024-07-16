@@ -9,13 +9,20 @@ import * as markdown from "./Markdown.svelte";
 import * as objectFullScreen from "./ObjectFullScreen.svelte";
 import * as unknown from "./Unknown.svelte";
 import * as video from "./Video.svelte";
+import { unwrap } from "$lib/utils";
 
 export type RendererBundle = {
     default: Renderer;
-    filetypes: FiletypeValidators;
+    data: Data;
 };
 
-export const renderers: RendererBundle[] = [
+export type Data = {
+    filetypes: FiletypeValidators;
+    name: string;
+    displayName: string;
+};
+
+export const renderers = [
     image,
     markdown,
     objectFullScreen,
@@ -23,17 +30,23 @@ export const renderers: RendererBundle[] = [
     video,
     binary,
     unknown,
-];
+] satisfies RendererBundle[];
 
 export type Props = { serverPath: string };
 export type Renderer = Component<Props>;
 
 export function getRenderer(filetype: Filetype): Renderer {
     for (const bundle of renderers) {
-        if (validateFiletype(filetype, bundle.filetypes)) {
+        if (validateFiletype(filetype, bundle.data.filetypes)) {
             return bundle.default;
         }
     }
 
     return unknown.default;
+}
+
+export type RendererName = typeof renderers[number]["data"]["name"]
+
+export function getRendererByName(name: RendererName): Renderer {
+    return unwrap(renderers.find((r) => r.data.name === name)?.default);
 }

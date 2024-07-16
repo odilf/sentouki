@@ -1,8 +1,11 @@
 <script lang="ts" context="module">
-    import type { FiletypeValidators } from "../filetypes";
-    export const filetypes: FiletypeValidators = {
-        extensions: ["md", "markdown"],
-    };
+    export const data = {
+        filetypes: {
+            extensions: ["md", "markdown"],
+        },
+        name: "markdown",
+        displayName: "Markdown",
+    } as const satisfies Data;
 
     import { unified } from "unified";
     import remarkParse from "remark-parse";
@@ -22,7 +25,7 @@
 </script>
 
 <script lang="ts">
-    import type { Props } from ".";
+    import type { Data, Props } from ".";
     import { browser } from "$app/environment";
 
     let { serverPath }: Props = $props();

@@ -1,13 +1,17 @@
 <script lang="ts" context="module">
     import type { FiletypeValidators } from "../filetypes";
-    export const filetypes: FiletypeValidators = {
-        mimeTypes: (type) => type.startsWith("video/"),
-    };
+    export const data = {
+        filetypes: {
+            mimeTypes: (type) => type.startsWith("video/"),
+        },
+        name: "video",
+        displayName: "Video",
+    } as const satisfies Data;
 </script>
 
 <script lang="ts">
     import VideoPlayer from "$lib/components/ui/video-player/VideoPlayer.svelte";
-    import type { Props } from ".";
+    import type { Data, Props } from ".";
 
     let { serverPath }: Props = $props();
 </script>

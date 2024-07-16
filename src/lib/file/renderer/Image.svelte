@@ -1,10 +1,14 @@
 <script lang="ts" context="module">
     import { filetypesOf } from "../filetypes";
-    export const filetypes = filetypesOf("image");
+    export const data = {
+        filetypes: filetypesOf("image"),
+        name: "image",
+        displayName: "Image",
+    } as const satisfies Data;
 </script>
 
 <script lang="ts">
-    import type { Props } from ".";
+    import type { Data, Props } from ".";
 
     let { serverPath }: Props = $props();
 </script>

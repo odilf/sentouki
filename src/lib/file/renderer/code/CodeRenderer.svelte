@@ -1,17 +1,21 @@
 <script lang="ts" context="module">
-    import type { FiletypeValidators } from "$lib/file/filetypes";
-    export const filetypes: FiletypeValidators = {
-        extensions: (extension) => extension in bundledLanguages,
-        mimeTypes: (type) => type.startsWith("text/"),
-    };
+    export const data = {
+        filetypes: {
+            extensions: (extension) => extension in bundledLanguages,
+            mimeTypes: (type) => type.startsWith("text/"),
+        },
+        name: "code",
+        displayName: "Code",
+    } as const satisfies Data;
 </script>
 
 <script lang="ts">
-    import { bundledLanguages, type BundledLanguage } from "shiki";
+    import type { Data, Props } from "..";
     import Code from "./Code.svelte";
     import { browser } from "$app/environment";
+    import { bundledLanguages, type BundledLanguage } from "shiki";
 
-    let { serverPath }: { serverPath: string } = $props();
+    let { serverPath }: Props = $props();
     let extension = $derived(serverPath.split(".").at(-1) ?? "");
 
     function isBundledLanguage(

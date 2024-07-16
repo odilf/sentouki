@@ -1,12 +1,15 @@
 <script lang="ts" context="module">
-    import type { FiletypeValidators } from "../filetypes";
-    export const filetypes: FiletypeValidators = {
-        extensions: ["pdf", "obj"],
-    };
+    export const data = {
+        filetypes: {
+            extensions: ["pdf", "obj"],
+        },
+        name: "objectFullScreen",
+        displayName: "Full Screen Object"
+    } as const satisfies Data;
 </script>
 
 <script lang="ts">
-    import type { Props } from ".";
+    import type { Data, Props } from ".";
 
     let { serverPath }: Props = $props();
 </script>

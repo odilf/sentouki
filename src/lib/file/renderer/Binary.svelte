@@ -1,13 +1,16 @@
 <script lang="ts" context="module">
-    import type { FiletypeValidators } from "$lib/file/filetypes";
-    export const filetypes: FiletypeValidators = {
-        mimeTypes: ["application/octet-stream"],
-    };
+    export const data = {
+        filetypes: {
+            mimeTypes: ["application/octet-stream"],
+        },
+        name: "binary",
+        displayName: "Binary",
+    } as const satisfies Data;
 </script>
 
 <script lang="ts">
     import { Button } from "$lib/components/ui/button";
-    import type { Props } from ".";
+    import type { Data, Props } from ".";
 
     let { serverPath }: Props = $props();
 

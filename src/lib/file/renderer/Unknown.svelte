@@ -1,12 +1,15 @@
 <script lang="ts" context="module">
-    import type { FiletypeValidators } from "../filetypes";
-    export const filetypes: FiletypeValidators = {
-        mimeTypes: () => true,
-    };
+    export const data = {
+        filetypes: {
+            mimeTypes: () => true,
+        },
+        name: "unknown",
+        displayName: "Unknown",
+    } as const satisfies Data;
 </script>
 
 <script lang="ts">
-    import type { Props } from ".";
+    import type { Data, Props } from ".";
 
     let { serverPath }: Props = $props();
 </script>
