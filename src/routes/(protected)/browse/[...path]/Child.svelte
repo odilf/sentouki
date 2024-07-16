@@ -36,6 +36,7 @@
     import { getIcon } from "$lib/file/filetypes";
     import { Button } from "$lib/components/ui/button";
     import { encodePath } from "$lib/utils";
+    import { fly } from "svelte/transition";
 
     let {
         data,
@@ -60,39 +61,44 @@
     }
 </script>
 
-<Button
-    class="flex w-full {index % 2 === 0
-        ? ''
-        : 'bg-secondary/50 text-secondary-foreground'}"
-    href={browsePath}
-    variant="link"
->
-    {#each columns as { width, content }}
-        <div style={widthStyle(width)} class="text-ellipsis overflow-hidden">
-            {#if content === "index"}
-                <div class="opacity-25 text-right pr-4">
-                    {index}
-                </div>
-            {:else if content === "icon"}
-                <svelte:component
-                    this={getIcon(data.filetype)}
-                    class="h-8 w-8"
-                />
-            {:else if content === "name"}
-                <div
-                    class="font-medium flex-1 p-2 overflow-hidden whitespace-nowrap text-ellipsis"
-                >
-                    {data.name}
-                </div>
-            {:else if content === "path"}
-                {data.path}
-            {:else if content === "size"}
-                {data.source === "db" ? formatBytes(data.size) : "-"}
-            {:else if content === "date"}
-                {data.source === "db" ? displayDateRange(data.date) : "-"}
-            {:else if content === "mimeType"}
-                {data.filetype.mimeType}
-            {/if}
-        </div>
-    {/each}
-</Button>
+<div in:fly|global={{ y: 2, delay: index * 10 }}>
+    <Button
+        class="flex w-full {index % 2 === 0
+            ? ''
+            : 'bg-secondary/50 text-secondary-foreground'}"
+        href={browsePath}
+        variant="link"
+    >
+        {#each columns as { width, content }}
+            <div
+                style={widthStyle(width)}
+                class="text-ellipsis overflow-hidden"
+            >
+                {#if content === "index"}
+                    <div class="opacity-25 text-right pr-4">
+                        {index}
+                    </div>
+                {:else if content === "icon"}
+                    <svelte:component
+                        this={getIcon(data.filetype)}
+                        class="h-8 w-8"
+                    />
+                {:else if content === "name"}
+                    <div
+                        class="font-medium flex-1 p-2 overflow-hidden whitespace-nowrap text-ellipsis"
+                    >
+                        {data.name}
+                    </div>
+                {:else if content === "path"}
+                    {data.path}
+                {:else if content === "size"}
+                    {data.source === "db" ? formatBytes(data.size) : "-"}
+                {:else if content === "date"}
+                    {data.source === "db" ? displayDateRange(data.date) : "-"}
+                {:else if content === "mimeType"}
+                    {data.filetype.mimeType}
+                {/if}
+            </div>
+        {/each}
+    </Button>
+</div>

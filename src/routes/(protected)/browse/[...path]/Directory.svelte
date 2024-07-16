@@ -24,20 +24,24 @@
     ];
 </script>
 
-<div class="max-w-full w-full mx-auto">
-    {#each children.db as child, i}
-        <Child data={{ ...child, source: "db" }} index={i} {columns} />
-    {/each}
-
-    {#await children.fs then fsChildren}
-        {#each fsChildren as child, i}
-            {#await child then child}
-                <Child
-                    data={{ ...child, source: "filesystem" }}
-                    index={i}
-                    {columns}
-                />
-            {/await}
+{#key file.path}
+    <div class="max-w-full w-full mx-auto">
+        {#each children.db as child, i}
+            <Child data={{ ...child, source: "db" }} index={i} {columns} />
         {/each}
-    {/await}
-</div>
+
+        {#await children.fs then fsChildren}
+            {#each fsChildren as child, i}
+                {#await child then child}
+                    {#if children.db.every((dbChild) => dbChild.path !== child.path)}
+                        <Child
+                            data={{ ...child, source: "filesystem" }}
+                            index={i}
+                            {columns}
+                        />
+                    {/if}
+                {/await}
+            {/each}
+        {/await}
+    </div>
+{/key}
