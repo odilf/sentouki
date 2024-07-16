@@ -20,6 +20,7 @@
         await goto(url, {
             keepFocus: true,
             invalidateAll: true,
+            replaceState: true,
         });
     }
 
