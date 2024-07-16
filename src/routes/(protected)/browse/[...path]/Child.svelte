@@ -49,7 +49,7 @@
     } = $props();
 
     let browsePath = $derived(
-        encodePath(`/browse/${data.path}`) // TODO: This broken
+        encodePath(`/browse/${data.path}`)
     );
 
     function widthStyle(width: Width): string {
