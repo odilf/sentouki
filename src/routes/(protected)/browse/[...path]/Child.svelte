@@ -48,9 +48,7 @@
         columns: Column[];
     } = $props();
 
-    let browsePath = $derived(
-        encodePath(`/browse/${data.path}`)
-    );
+    let browsePath = $derived(encodePath(`/browse/${data.path}`));
 
     function widthStyle(width: Width): string {
         if (width === "fit") return "width: fit-content;";
@@ -58,6 +56,8 @@
         if ("px" in width) return `width: ${width.px}px;`;
         if ("percent" in width) return `width: ${width.percent}%;`;
         if ("ch" in width) return `width: ${width.ch}ch;`;
+
+        throw new Error("unreachable")
     }
 </script>
 
