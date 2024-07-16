@@ -33,6 +33,7 @@
                     href="/browse/{data.file.path
                         .split('/')
                         .slice(0, i + 1)
+                        .map(encodeURIComponent)
                         .join('/')}">{component}</Breadcrumb.Link
                 >
             </Breadcrumb.Item>

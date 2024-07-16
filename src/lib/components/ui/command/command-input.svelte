@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Command as CommandPrimitive } from "cmdk-sv";
+    import type { Command as CommandPrimitive } from "cmdk-sv";
     import Search from "lucide-svelte/icons/search";
     import { cn } from "$lib/utils.js";
 
@@ -7,7 +7,7 @@
 
     let className: string | undefined | null = undefined;
     export { className as class };
-    export let value: string = "";
+    export let value = "";
 </script>
 
 <div class="flex items-center border-b px-2" data-cmdk-input-wrapper="">

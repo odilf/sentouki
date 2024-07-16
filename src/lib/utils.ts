@@ -88,3 +88,11 @@ export function todo(message = "Not implemented"): never {
 export function delayReject(ms: number): Promise<void> {
     return new Promise((_, reject) => setTimeout(reject, ms));
 }
+
+export function encodePath(path: string) {
+    return path.split("/").map(encodeURIComponent).join("/");
+}
+
+export function decodePath(path: string) {
+    return path.split("/").map(decodeURIComponent).join("/");
+}

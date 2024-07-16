@@ -7,6 +7,12 @@ import { dbToTs, type DbFile, type File, type FsFile } from "$lib/file/types";
 import { getChildrenData, getFilesystemData } from "$lib/file/filesystem";
 import { unwrap } from "$lib/utils";
 
+async function getFilesystemChildrenDataUnwrapped(
+    path: string
+): Promise<Promise<FsFile>[]> {
+    return unwrap(await getChildrenData(path));
+}
+
 export const load = (async ({ params: { path } }) => {
     const record = await db.query.fileTable.findFirst({
         where: eq(fileTable.path, path),
@@ -28,19 +34,14 @@ export const load = (async ({ params: { path } }) => {
             ...fsFile,
         };
 
-        let fsChildren: Promise<FsFile>[] = [];
-
-        if (file.filetype.mimeType === "inode/directory") {
-            fsChildren = unwrap(
-                await getChildrenData(path),
-                "Directory should have children"
-            );
-        }
+        const isDirectory = fsFile.filetype.mimeType === "inode/directory";
 
         return {
             file,
             children: {
-                fs: fsChildren,
+                fs: isDirectory
+                    ? getFilesystemChildrenDataUnwrapped(path)
+                    : Promise.resolve([]),
                 db: [] as DbFile[],
             },
         };
@@ -51,16 +52,24 @@ export const load = (async ({ params: { path } }) => {
         ...dbToTs(record),
     };
 
-    let dbChildren: DbFile[] = [];
+    let children: {
+        db: DbFile[];
+        fs: Promise<Promise<FsFile>[]>;
+    };
     if (record.mimeType === "inode/directory") {
-        dbChildren = record.children.map(dbToTs);
+        children = {
+            db: record.children.map(dbToTs),
+            fs: getFilesystemChildrenDataUnwrapped(path),
+        };
+    } else {
+        children = {
+            db: [],
+            fs: Promise.resolve([]),
+        };
     }
 
     return {
         file,
-        children: {
-            fs: [] as Promise<FsFile>[],
-            db: dbChildren,
-        },
+        children,
     };
 }) satisfies PageServerLoad;

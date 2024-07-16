@@ -35,6 +35,7 @@
     import { formatBytes } from "$lib/file/size";
     import { getIcon } from "$lib/file/filetypes";
     import { Button } from "$lib/components/ui/button";
+    import { encodePath } from "$lib/utils";
 
     let {
         data,
@@ -47,7 +48,7 @@
     } = $props();
 
     let browsePath = $derived(
-        `/browse/${data.path}`.split("/").map(encodeURIComponent).join("/") // TODO: This broken
+        encodePath(`/browse/${data.path}`) // TODO: This broken
     );
 
     function widthStyle(width: Width): string {

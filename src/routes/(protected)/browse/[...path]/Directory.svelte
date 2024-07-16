@@ -9,7 +9,7 @@
         file: File;
         children: {
             db: DbFile[];
-            fs: Promise<FsFile>[];
+            fs: Promise<Promise<FsFile>[]>;
         };
     } = $props();
 
@@ -21,7 +21,7 @@
         { width: { px: 100 }, content: "size" },
         { width: { px: 100 }, content: "date" },
         { width: { px: 100 }, content: "mimeType" },
-    ]
+    ];
 </script>
 
 <div class="max-w-full w-full mx-auto">
@@ -29,9 +29,15 @@
         <Child data={{ ...child, source: "db" }} index={i} {columns} />
     {/each}
 
-    {#each children.fs as child, i}
-        {#await child then child}
-            <Child data={{ ...child, source: "filesystem" }} index={i} {columns} />
-        {/await}
-    {/each}
+    {#await children.fs then fsChildren}
+        {#each fsChildren as child, i}
+            {#await child then child}
+                <Child
+                    data={{ ...child, source: "filesystem" }}
+                    index={i}
+                    {columns}
+                />
+            {/await}
+        {/each}
+    {/await}
 </div>
