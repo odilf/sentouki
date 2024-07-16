@@ -1,18 +1,18 @@
 <script lang="ts">
-import Directory from "./Directory.svelte";
-import File from "./File.svelte";
-import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
+    import Directory from "./Directory.svelte";
+    import File from "./File.svelte";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index.js";
 
-let { data } = $props();
-let scrollingContainer: HTMLDivElement | undefined = $state(undefined);
+    let { data } = $props();
+    let scrollingContainer: HTMLDivElement | undefined = $state(undefined);
 
-$effect(() => {
-	if (data.file.path) {
-		scrollingContainer?.scrollTo({
-			left: scrollingContainer.scrollWidth,
-		});
-	}
-});
+    $effect(() => {
+        if (data.file.path) {
+            scrollingContainer?.scrollTo({
+                left: scrollingContainer.scrollWidth,
+            });
+        }
+    });
 </script>
 
 <Breadcrumb.Root

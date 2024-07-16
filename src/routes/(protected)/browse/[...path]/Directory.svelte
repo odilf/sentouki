@@ -1,7 +1,5 @@
 <script lang="ts">
-    import * as Table from "$lib/components/ui/table";
-
-    import Child from "./Child.svelte";
+    import Child, { type Column } from "./Child.svelte";
     import type { DbFile, File, FsFile } from "$lib/file/types";
 
     let {
@@ -14,29 +12,26 @@
             fs: Promise<FsFile>[];
         };
     } = $props();
+
+    const columns: Column[] = [
+        { width: { ch: 5 }, content: "index" },
+        { width: "fit", content: "icon" },
+        { width: { fr: 1 }, content: "name" },
+        { width: { fr: 0.2 }, content: "path" },
+        { width: { px: 100 }, content: "size" },
+        { width: { px: 100 }, content: "date" },
+        { width: { px: 100 }, content: "mimeType" },
+    ]
 </script>
 
-<Table.Root>
-    <Table.Header class="sticky top-0">
-        <Table.Row class="sticky top-0">
-            <Table.Head class="w-[20px]"><!-- Index --></Table.Head>
-            <Table.Head class="w-[100px]"><!-- Type --></Table.Head>
-            <Table.Head>Name</Table.Head>
-            <Table.Head>Size</Table.Head>
-            <Table.Head>Date</Table.Head>
-            <Table.Head>Mime type</Table.Head>
-        </Table.Row>
-    </Table.Header>
+<div class="max-w-full w-full mx-auto">
+    {#each children.db as child, i}
+        <Child data={{ ...child, source: "db" }} index={i} {columns} />
+    {/each}
 
-    <Table.Body>
-        {#each children.db as child, i}
-            <Child data={{ ...child, source: "db" }} index={i} />
-        {/each}
-
-        {#each children.fs as child, i}
-            {#await child then child}
-                <Child data={{ ...child, source: "filesystem" }} index={i} />
-            {/await}
-        {/each}
-    </Table.Body>
-</Table.Root>
+    {#each children.fs as child, i}
+        {#await child then child}
+            <Child data={{ ...child, source: "filesystem" }} index={i} {columns} />
+        {/await}
+    {/each}
+</div>
