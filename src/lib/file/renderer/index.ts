@@ -32,7 +32,7 @@ export const renderers = [
     unknown,
 ] satisfies RendererBundle[];
 
-export type Props = { serverPath: string };
+export type Props = { serverPath: string, file: File };
 export type Renderer = Component<Props>;
 
 export function getRenderer(filetype: Filetype): Renderer {

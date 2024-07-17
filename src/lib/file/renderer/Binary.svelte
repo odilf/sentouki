@@ -12,22 +12,21 @@
     import { Button } from "$lib/components/ui/button";
     import type { Data, Props } from ".";
 
-    let { serverPath }: Props = $props();
+    let { serverPath, file }: Props = $props();
 
-    async function getStream(serverPath: string) {
-        const response = await fetch(serverPath);
-        const blob = await response.blob();
-        return await blob.arrayBuffer();
-    }
+    // async function getStream(serverPath: string) {
+    //     const response = await fetch(serverPath);
+    //     const blob = await response.blob();
+    //     return await blob.arrayBuffer();
+    // }
 
     // let byteStream: ReadableStream<Uint8Array> | null = null
     // let bytes: ArrayBuffer | null = null
 </script>
 
 <Button
-    on:click={() => {
-        getStream(serverPath);
-    }}
+    href={serverPath}
+    download={file.name}
 >
     Download
 </Button>

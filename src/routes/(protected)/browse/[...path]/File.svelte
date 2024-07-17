@@ -19,5 +19,5 @@
 </script>
 
 <main class="mx-auto min-h-[100dvh] max-w-6xl px-4 py-8">
-    <svelte:component this={urlRenderer?.default ?? getRenderer(file.filetype)} {serverPath} />
+    <svelte:component this={urlRenderer?.default ?? getRenderer(file.filetype)} {serverPath} {file} />
 </main>
