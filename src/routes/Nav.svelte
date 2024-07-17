@@ -69,7 +69,7 @@
         </div>
         <a class="opacity-50 font-bold text-center" href="/">sentouki</a>
         <div class="flex-1 overflow-hidden flex justify-end">
-            {#if file?.filetype.mimeType !== "inode/directory"}
+            {#if file && file.filetype.mimeType !== "inode/directory"}
                 <Select.Root
                     selected={{
                         value: initialRenderer?.data.name ?? null,
