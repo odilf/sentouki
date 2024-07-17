@@ -9,6 +9,7 @@
     import { renderers } from "$lib/file/renderer";
     import { formatBytes } from "$lib/file/size";
     import type { File } from "$lib/file/types";
+    import { encodePath } from "$lib/utils";
     import type { User } from "lucia";
     import { UserIcon } from "lucide-svelte";
 
@@ -70,6 +71,10 @@
         <a class="opacity-50 font-bold text-center" href="/">sentouki</a>
         <div class="flex-1 overflow-hidden flex justify-end">
             {#if file && file.filetype.mimeType !== "inode/directory"}
+                <Button href="/raw/{encodePath($page.data.file?.path ?? "")}" variant="ghost" class="opacity-50">
+                    View raw
+                </Button>
+
                 <Select.Root
                     selected={{
                         value: initialRenderer?.data.name ?? null,
