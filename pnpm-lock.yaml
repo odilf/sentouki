@@ -83,9 +83,6 @@ importers:
       tailwind-variants:
         specifier: ^0.2.1
         version: 0.2.1(tailwindcss@3.4.4)
-      ts-todo:
-        specifier: github:Odilf/ts-todo#4f5d78e
-        version: https://codeload.github.com/Odilf/ts-todo/tar.gz/4f5d78e
       unified:
         specifier: ^11.0.5
         version: 11.0.5
@@ -3763,11 +3760,6 @@ packages:
 
   ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
-
-  ts-todo@https://codeload.github.com/Odilf/ts-todo/tar.gz/4f5d78e:
-    resolution: {tarball: https://codeload.github.com/Odilf/ts-todo/tar.gz/4f5d78e}
-    version: 2.0.0
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   tslib@2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
@@ -7623,8 +7615,6 @@ snapshots:
   ts-deepmerge@7.0.0: {}
 
   ts-interface-checker@0.1.13: {}
-
-  ts-todo@https://codeload.github.com/Odilf/ts-todo/tar.gz/4f5d78e: {}
 
   tslib@2.4.0:
     optional: true

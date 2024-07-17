@@ -71,7 +71,6 @@
         "sveltekit-superforms": "^2.16.0",
         "tailwind-merge": "^2.4.0",
         "tailwind-variants": "^0.2.1",
-        "ts-todo": "github:Odilf/ts-todo#4f5d78e",
         "unified": "^11.0.5",
         "vidstack": "^1.11.29",
         "zod": "^3.23.8"
