@@ -26,7 +26,7 @@
 
 {#key file.path}
     <div class="max-w-full w-full mx-auto">
-        {#each children.db as child, i}
+        {#each children.db as child, i (child.path)}
             <Child data={{ ...child, source: "db" }} index={i} {columns} />
         {/each}
 
@@ -36,7 +36,7 @@
                     {#if children.db.every((dbChild) => dbChild.path !== child.path)}
                         <Child
                             data={{ ...child, source: "filesystem" }}
-                            index={i}
+                            index={i + children.db.length}
                             {columns}
                         />
                     {/if}
