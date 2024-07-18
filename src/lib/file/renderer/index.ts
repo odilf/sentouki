@@ -1,9 +1,10 @@
 import type { Component } from "svelte";
-import type { Filetype } from "../types";
+import type { Filetype, File } from "../types";
 import { validateFiletype, type FiletypeValidators } from "../filetypes";
 
-import * as binary from "./Binary.svelte";
+import * as json from "./json/JsonRenderer.svelte";
 import * as code from "./code/CodeRenderer.svelte";
+import * as binary from "./Binary.svelte";
 import * as image from "./Image.svelte";
 import * as markdown from "./Markdown.svelte";
 import * as objectFullScreen from "./ObjectFullScreen.svelte";
@@ -23,6 +24,7 @@ export type Data = {
 };
 
 export const renderers = [
+    json,
     image,
     markdown,
     objectFullScreen,
