@@ -26,7 +26,7 @@ function iteratorToStream<T>(iterator: AsyncGenerator<T>) {
 }
 
 export const GET: RequestHandler = async ({ params, request }) => {
-    const fsPath = `${base}/${params.path}`;
+    const fsPath = `${base()}/${params.path}`;
 
     try {
         const stats = await lstat(fsPath);

@@ -62,6 +62,10 @@ export const flyAndScale = (
     };
 };
 
+export function panic(message: string): never {
+    throw new Error(message);
+}
+
 /**
  * Unwrap a value that is possibly null or undefined
  */
@@ -70,7 +74,7 @@ export function unwrap<T>(
     message = "Tried to unwrap a null value"
 ): NonNullable<T> {
     if (value === null || value === undefined) {
-        throw new Error(message);
+        panic(message);
     }
 
     return value;

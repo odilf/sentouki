@@ -24,12 +24,7 @@
     // let bytes: ArrayBuffer | null = null
 </script>
 
-<Button
-    href={serverPath}
-    download={file.name}
->
-    Download
-</Button>
+<Button href={serverPath} download={file.name}>Download</Button>
 
 Binary data. UOH File Browser doesn't yet support interesting ways to represent
 binary data.

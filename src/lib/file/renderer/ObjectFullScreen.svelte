@@ -4,7 +4,7 @@
             extensions: ["pdf", "obj"],
         },
         name: "objectFullScreen",
-        displayName: "Full Screen Object"
+        displayName: "Full Screen Object",
     } as const satisfies Data;
 </script>
 

@@ -57,7 +57,7 @@
         if ("percent" in width) return `width: ${width.percent}%;`;
         if ("ch" in width) return `width: ${width.ch}ch;`;
 
-        throw new Error("unreachable")
+        throw new Error("unreachable");
     }
 </script>
 

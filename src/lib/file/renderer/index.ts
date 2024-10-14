@@ -34,7 +34,7 @@ export const renderers = [
     unknown,
 ] satisfies RendererBundle[];
 
-export type Props = { serverPath: string, file: File };
+export type Props = { serverPath: string; file: File };
 export type Renderer = Component<Props>;
 
 export function getRenderer(filetype: Filetype): Renderer {
@@ -47,7 +47,7 @@ export function getRenderer(filetype: Filetype): Renderer {
     return unknown.default;
 }
 
-export type RendererName = typeof renderers[number]["data"]["name"]
+export type RendererName = (typeof renderers)[number]["data"]["name"];
 
 export function getRendererByName(name: RendererName): Renderer {
     return unwrap(renderers.find((r) => r.data.name === name)?.default);

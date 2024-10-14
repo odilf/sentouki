@@ -11,4 +11,10 @@ export default defineConfig({
         topLevelAwait({}),
         sveltekit(),
     ],
+
+    build: {
+        rollupOptions: {
+            external: ["sharp"],
+        },
+    },
 });

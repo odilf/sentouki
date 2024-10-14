@@ -2,7 +2,7 @@
     export const data = {
         filetypes: {
             mimeTypes: ["application/json"],
-			extensions: ["json"],
+            extensions: ["json"],
         },
         name: "json",
         displayName: "JSON",

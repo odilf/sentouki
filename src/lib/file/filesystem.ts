@@ -3,7 +3,7 @@ import type { FsFile } from "./types";
 import { execFile as execFileCallback } from "node:child_process";
 import { promisify } from "node:util";
 import { unwrap } from "$lib/utils";
-import { base, toFsPath } from "./path";
+import { toFsPath } from "./path";
 import { join } from "node:path";
 
 const execFile = promisify(execFileCallback);

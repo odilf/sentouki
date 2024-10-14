@@ -71,7 +71,11 @@
         <a class="opacity-50 font-bold text-center" href="/">sentouki</a>
         <div class="flex-1 overflow-hidden flex justify-end">
             {#if file && file.filetype.mimeType !== "inode/directory"}
-                <Button href="/raw/{encodePath($page.data.file?.path ?? "")}" variant="ghost" class="opacity-50">
+                <Button
+                    href="/raw/{encodePath($page.data.file?.path ?? '')}"
+                    variant="ghost"
+                    class="opacity-50"
+                >
                     View raw
                 </Button>
 
