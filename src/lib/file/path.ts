@@ -1,6 +1,7 @@
 import { dev } from "$app/environment";
 import { env } from "$env/dynamic/private";
 import { panic } from "$lib/utils";
+import { error } from "@sveltejs/kit";
 import { join } from "node:path";
 
 // TODO: The `/../../..` situation is a bit ugly
@@ -12,9 +13,9 @@ export const base = () => {
             env.BASE_PATH ??
             (dev
                 ? `${import.meta.dirname}/../../../test/sample-filetree`
-                : panic(
-                      "You need to set environment variable `BASE_PATH` for sentouki to work (in production). "
-                  ));
+                : error(500,
+                    "You need to set environment variable `BASE_PATH` for sentouki to work (in production). "
+                ));
     }
 
     return base_lazy;
