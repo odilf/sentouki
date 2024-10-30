@@ -41,6 +41,8 @@
                         />
                     {/if}
                 {/await}
+            {:else}
+                <p class="px-4 py-2"> Empty directory </p>
             {/each}
         {/await}
     </div>
