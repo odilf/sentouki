@@ -15,6 +15,6 @@ const pass = await password({
     message: "Password",
 });
 
-register(username.tostring(), email.tostring(), pass.tostring());
+register(username.toString(), email.toString(), pass.toString());
 
 outro("User added successfully!");

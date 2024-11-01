@@ -1,18 +1,16 @@
 {
   pkgs,
-
-  # https://kit.svelte.dev/docs/adapter-node#environment-variables-port-host-and-socket-path
-  port ? 6942,
-  # Can't be just `host` because it conflicts with package (and I prefer to not have to do
-  # [this](https://github.com/nixos/nixpkgs/commit/d17f0f9cbca38fabb71624f069cd4c0d6feace92))
-  serverHost ? null,
-  socketPath ? null,
+  lib,
 }:
 pkgs.stdenv.mkDerivation (finalAttrs: rec {
   pname = "sentouki";
   version = "0.1.0";
 
   src = pkgs.lib.cleanSource ./.;
+
+  buildInputs = [
+    pkgs.file
+  ];
 
   nativeBuildInputs = [
     pkgs.nodejs
@@ -23,7 +21,7 @@ pkgs.stdenv.mkDerivation (finalAttrs: rec {
 
   pnpmDeps = pkgs.pnpm.fetchDeps {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-e4vuc5veADyqm9hAeI/ZKtrhQPTCyBOVgwzeqhafzyI=";
+    hash = "sha256-ktHwRwQ5x3CyIlWSG6ea+fLUjI4iIdyV6H0XEDIWEs8=";
   };
 
   buildPhase = ''
@@ -42,19 +40,23 @@ pkgs.stdenv.mkDerivation (finalAttrs: rec {
 
     pnpm prune --prod
     cp -r node_modules package.json $out/
+    
+    # Slighty bodgy. Perhaps not only slightly.
+    mkdir -p $out/src/lib/server/db/
+    cp src/lib/server/db/schema.ts $out/src/lib/server/db/schema.ts
+    cp drizzle.config.ts $out/
 
     mkdir -p $out/bin
     echo "
       #!${pkgs.bash}/bin/bash 
+
+      export PATH=${lib.makeBinPath [ pkgs.file ]}
+
+      ${pkgs.nodejs}/bin/node $out/node_modules/drizzle-kit/bin.cjs push
       ${pkgs.nodejs}/bin/node $out/build
     " > $out/bin/${pname}
 
     chmod +x $out/bin/${pname}
-
-    wrapProgram $out/bin/${pname} \
-      --set PORT ${builtins.toString port} \
-      ${if serverHost != null then "--set HOST ${serverHost}" else ""} \
-      ${if socketPath != null then "--set SOCKET_PATH ${socketPath}" else ""} \
 
     runHook postInstall
   '';

@@ -1,11 +1,10 @@
 import type { Config } from "drizzle-kit";
 
+const url = process.env.DB_FILE || "local.db";
+
 export default {
     schema: "src/lib/server/db/schema.ts",
     out: "./migrations",
-    driver: "turso",
     dialect: "sqlite",
-    dbCredentials: {
-        url: "file:./local.db",
-    },
+    dbCredentials: { url }
 } satisfies Config;

@@ -20,7 +20,6 @@
           default = pkgs.callPackage ./default.nix { };
         };
 
-
         devShells.default = pkgs.mkShell {
           buildInputs = [
             pkgs.nodejs_22
@@ -36,5 +35,7 @@
 
         formatter = pkgs.nixfmt-rfc-style;
       }
-    );
+    ) // {
+      nixosModules.default = import ./module.nix;
+    };
 }
