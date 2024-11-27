@@ -77,7 +77,7 @@ in
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = commonServiceConfig // {
-      ExecStart = "${pkgs.nodejs}/bin/node ${sentouki-pkg}/build";
+      ExecStart = "${sentouki-pkg}/bin/sentouki";
       StateDirectory = "sentouki";
       SyslogIdentifier = "sentouki";
       RuntimeDirectory = "sentouki";
