@@ -17,7 +17,7 @@
       in
       {
         packages = {
-          default = pkgs.callPackage ./default.nix { };
+          default = pkgs.callPackage ./package.nix { };
         };
 
         devShells.default = pkgs.mkShell {
@@ -35,7 +35,8 @@
 
         formatter = pkgs.nixfmt-rfc-style;
       }
-    ) // {
+    )
+    // {
       nixosModules.default = import ./module.nix;
     };
 }

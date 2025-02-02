@@ -15,7 +15,6 @@ pkgs.stdenv.mkDerivation (finalAttrs: rec {
   nativeBuildInputs = [
     pkgs.nodejs
     pkgs.pnpm.configHook
-    pkgs.makeWrapper
     pkgs.vips
   ];
 
@@ -40,20 +39,19 @@ pkgs.stdenv.mkDerivation (finalAttrs: rec {
 
     pnpm prune --prod
     cp -r node_modules package.json $out/
-    
+
     # Slighty bodgy. Perhaps not only slightly.
     mkdir -p $out/src/lib/server/db/
     cp src/lib/server/db/schema.ts $out/src/lib/server/db/schema.ts
     cp drizzle.config.ts $out/
 
     mkdir -p $out/bin
-    echo "
-      #!${pkgs.bash}/bin/bash 
+    echo "\
+    #!${pkgs.bash}/bin/bash 
+    export PATH=${lib.makeBinPath [ pkgs.file ]}
 
-      export PATH=${lib.makeBinPath [ pkgs.file ]}
-
-      ${pkgs.nodejs}/bin/node $out/node_modules/drizzle-kit/bin.cjs push
-      ${pkgs.nodejs}/bin/node $out/build
+    ${pkgs.nodejs}/bin/node $out/node_modules/drizzle-kit/bin.cjs push
+    ${pkgs.nodejs}/bin/node $out/build
     " > $out/bin/${pname}
 
     chmod +x $out/bin/${pname}
@@ -61,4 +59,3 @@ pkgs.stdenv.mkDerivation (finalAttrs: rec {
     runHook postInstall
   '';
 })
-

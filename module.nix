@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.services.sentouki;
-  sentouki-pkg = pkgs.callPackage ./default.nix { };
+  sentouki-pkg = pkgs.callPackage ./package.nix { };
 
   # Taken from immich
   commonServiceConfig = {
@@ -77,7 +77,7 @@ in
     wantedBy = [ "multi-user.target" ];
 
     serviceConfig = commonServiceConfig // {
-      ExecStart = "${sentouki-pkg}/bin/sentouki";
+      ExecStart = "${pkgs.nodejs}/bin/node ${sentouki-pkg}/build";
       StateDirectory = "sentouki";
       SyslogIdentifier = "sentouki";
       RuntimeDirectory = "sentouki";
@@ -92,4 +92,3 @@ in
     };
   };
 }
-
