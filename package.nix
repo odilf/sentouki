@@ -48,7 +48,6 @@ pkgs.stdenv.mkDerivation (finalAttrs: rec {
     mkdir -p $out/bin
     echo "\
     #!${pkgs.bash}/bin/bash 
-    export PATH=${lib.makeBinPath [ pkgs.file ]}
 
     ${pkgs.nodejs}/bin/node $out/node_modules/drizzle-kit/bin.cjs push
     ${pkgs.nodejs}/bin/node $out/build
@@ -58,4 +57,6 @@ pkgs.stdenv.mkDerivation (finalAttrs: rec {
 
     runHook postInstall
   '';
+
+  PATH = lib.makeBinPath [ pkgs.file ];
 })
