@@ -1,20 +1,41 @@
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vitest/config";
 import { sveltekit } from "@sveltejs/kit/vite";
-import { vite as vidstack } from "vidstack/plugins";
-import { defineConfig } from "vite";
-import topLevelAwait from "vite-plugin-top-level-await";
-import { ViteFaviconsPlugin } from "vite-plugin-favicon2";
 
 export default defineConfig({
-    plugins: [
-        ViteFaviconsPlugin("./static/favicon.svg"),
-        vidstack({ include: /player\// }),
-        topLevelAwait({}),
-        sveltekit(),
-    ],
-
-    build: {
-        rollupOptions: {
-            external: ["sharp"],
-        },
+  plugins: [tailwindcss(), sveltekit()],
+  server: {
+    fs: {
+      strict: false,
     },
+  },
+  test: {
+    expect: { requireAssertions: true },
+    projects: [
+      {
+        extends: "./vite.config.ts",
+        test: {
+          name: "client",
+          environment: "browser",
+          browser: {
+            enabled: true,
+            provider: "playwright",
+            instances: [{ browser: "chromium" }],
+          },
+          include: ["src/**/*.svelte.{test,spec}.{js,ts}"],
+          exclude: ["src/lib/server/**"],
+          setupFiles: ["./vitest-setup-client.ts"],
+        },
+      },
+      {
+        extends: "./vite.config.ts",
+        test: {
+          name: "server",
+          environment: "node",
+          include: ["src/**/*.{test,spec}.{js,ts}"],
+          exclude: ["src/**/*.svelte.{test,spec}.{js,ts}"],
+        },
+      },
+    ],
+  },
 });

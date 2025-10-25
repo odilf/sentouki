@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+body {
+  background-color: black;
+  color: white;
+}
+
+@theme {
+  --font-sans: "Atkinson Hyperlegible Next Variable", sans-serif;
+}
+
+a {
+  @apply hover:underline;
+}

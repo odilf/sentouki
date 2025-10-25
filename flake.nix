@@ -1,42 +1,38 @@
 {
+  description = "Description for the project";
+
   inputs = {
+    flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
-    {
-      nixpkgs,
-      flake-utils,
-      ...
-    }:
-    flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-      in
-      {
-        packages = {
-          default = pkgs.callPackage ./package.nix { };
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
+      perSystem =
+        {
+          pkgs,
+          ...
+        }:
+        {
+          devShells.default = pkgs.mkShell {
+            packages = [
+              pkgs.pnpm_10
+              pkgs.nodejs_24
+            ];
+          };
+
+          packages.default = pkgs.callPackage ./nix/package.nix { };
         };
 
-        devShells.default = pkgs.mkShell {
-          buildInputs = [
-            pkgs.nodejs_24
-            pkgs.pnpm
-          ];
-
-          shellHook = ''
-            pnpm db:push
-            pnpm exec vite-node --script scripts/seedDb.ts
-            pnpm i
-          '';
-        };
-
-        formatter = pkgs.nixfmt-rfc-style;
-      }
-    )
-    // {
-      nixosModules.default = import ./module.nix;
+      flake = {
+        nixosModules.default = import ./nix/module.nix;
+      };
     };
 }

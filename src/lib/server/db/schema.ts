@@ -1,49 +1,20 @@
-import { relations } from "drizzle-orm";
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
-export const userTable = sqliteTable("user", {
+export const user = sqliteTable("user", {
     id: text("id").primaryKey(),
+    age: integer("age"),
     username: text("username").notNull().unique(),
-    email: text("email").notNull().unique(),
-    hashed_password: text("hashed_password").notNull(),
-    isAdmin: integer("is_admin", { mode: "boolean" }).default(false),
+    passwordHash: text("password_hash").notNull(),
 });
 
-export const sessionTable = sqliteTable("session", {
+export const session = sqliteTable("session", {
     id: text("id").primaryKey(),
     userId: text("user_id")
         .notNull()
-        .references(() => userTable.id),
-    expiresAt: integer("expires_at").notNull(),
+        .references(() => user.id),
+    expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
 });
 
-export const fileTable = sqliteTable(
-    "file_cache",
-    {
-        name: text("name").notNull(),
-        path: text("path").notNull().primaryKey(),
-        mimeType: text("mime_type").notNull(),
-        dateStart: integer("date_start", { mode: "timestamp" }),
-        dateEnd: integer("date_end", { mode: "timestamp" }),
-        dateCached: integer("date_cached", { mode: "timestamp" }).notNull(),
-        size: integer("size").notNull(),
-        parent: text("parent_path"),
-        hash: text("hash").notNull(),
-    },
-    (table) => ({
-        pathIdx: index("path_idx").on(table.path),
-        typeIdx: index("type_idx").on(table.path),
-    })
-);
+export type Session = typeof session.$inferSelect;
 
-export const filesRelations = relations(fileTable, ({ one, many }) => ({
-    parent: one(fileTable, {
-        fields: [fileTable.parent],
-        references: [fileTable.path],
-        relationName: "parent",
-    }),
-
-    children: many(fileTable, {
-        relationName: "parent",
-    }),
-}));
+export type User = typeof user.$inferSelect;
