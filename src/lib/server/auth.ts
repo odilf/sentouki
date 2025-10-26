@@ -1,9 +1,14 @@
-import type { RequestEvent } from "@sveltejs/kit";
+import { fail, redirect, type RequestEvent } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { sha256 } from "@oslojs/crypto/sha2";
-import { encodeBase64url, encodeHexLowerCase } from "@oslojs/encoding";
+import {
+  encodeBase32LowerCase,
+  encodeBase64url,
+  encodeHexLowerCase,
+} from "@oslojs/encoding";
 import { db } from "$lib/server/db";
 import * as table from "$lib/server/db/schema";
+import { hash } from "@node-rs/argon2";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
@@ -85,4 +90,55 @@ export function deleteSessionTokenCookie(event: RequestEvent) {
   event.cookies.delete(sessionCookieName, {
     path: "/",
   });
+}
+
+function generateUserId() {
+  // ID with 120 bits of entropy, or about the same as UUID v4.
+  const bytes = crypto.getRandomValues(new Uint8Array(15));
+  const id = encodeBase32LowerCase(bytes);
+  return id;
+}
+
+export async function register(username: string, password: string) {
+  if (!validateUsername(username)) {
+    return fail(400, { message: "Invalid username" });
+  }
+  if (!validatePassword(password)) {
+    return fail(400, { message: "Invalid password" });
+  }
+
+  const userId = generateUserId();
+  const passwordHash = await hash(password, {
+    // recommended minimum parameters
+    memoryCost: 19456,
+    timeCost: 2,
+    outputLen: 32,
+    parallelism: 1,
+  });
+
+  try {
+    await db.insert(table.user).values({ id: userId, username, passwordHash });
+  } catch (err) {
+    console.error(err);
+    return fail(500, { message: "Couldn't insert to database" });
+  }
+
+  return redirect(302, "/browse");
+}
+
+export function validateUsername(username: unknown): username is string {
+  return (
+    typeof username === "string" &&
+    username.length >= 3 &&
+    username.length <= 31 &&
+    /^[a-z0-9_-]+$/.test(username)
+  );
+}
+
+export function validatePassword(password: unknown): password is string {
+  return (
+    typeof password === "string" &&
+    password.length >= 6 &&
+    password.length <= 255
+  );
 }

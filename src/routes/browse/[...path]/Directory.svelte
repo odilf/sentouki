@@ -3,25 +3,13 @@
   import type { Directory } from "$lib/server/files";
   import { fly } from "svelte/transition";
   import Breadcrumbs from "./Breadcrumbs.svelte";
+  import { formatBytes } from "$lib/fileSize";
 
   let {
     dir,
     path,
     animate,
   }: { dir: Directory; path: string; animate: boolean } = $props();
-
-  function formatBytes(bytes: number, decimals = 2) {
-    if (bytes <= 0) {
-      return "0 Bytes";
-    }
-
-    const k = 1000;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return `${Number.parseFloat((bytes / k ** i).toFixed(decimals))} ${sizes[i]}`;
-  }
 </script>
 
 <header class="mx-auto flex w-fit items-baseline gap-1 px-4 py-1">

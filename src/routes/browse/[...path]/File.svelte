@@ -1,13 +1,69 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
+  import { formatBytes } from "$lib/fileSize";
   import type { File } from "$lib/server/files";
   import Breadcrumbs from "./Breadcrumbs.svelte";
+  import Browser from "./renderer/Browser.svelte";
+  import PlainText from "./renderer/PlainText.svelte";
 
   let { file, path }: { file: File; path: string } = $props();
   let raw = $derived(`/raw/${path}` as const);
+
+  function defaultRenderer(mimeType: string | undefined) {
+    if (mimeType?.startsWith("text/")) {
+      return PlainText;
+    } else {
+      return Browser;
+    }
+  }
+
+  const availableRenderers = [
+    ["plain text", PlainText],
+    ["browser", Browser],
+  ] as const;
+
+  let properties = $derived([
+    ["Size", file.size == null ? "unknown" : formatBytes(file.size)],
+    [
+      "Creation date",
+      file.creation == null
+        ? "unknown"
+        : file.creation.toLocaleString("en", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }),
+    ],
+    ["MIME type", file.mimeType],
+  ]);
+
+  let Renderer = $derived(defaultRenderer(file.mimeType));
+  let dialog: HTMLDialogElement;
 </script>
 
-<main class="flex h-screen w-screen flex-col items-center">
+<dialog
+  bind:this={dialog}
+  closedby="any"
+  class="mx-auto mt-8 rounded-sm bg-white/70 p-4 text-black backdrop-blur-md"
+>
+  <div class="grid grid-cols-2 gap-1">
+    {#each properties as [name, value] (name)}
+      <div class="mr-2 font-light">
+        {name}
+      </div>
+      <div>
+        {value}
+      </div>
+    {/each}
+  </div>
+  <button
+    class="mt-3 w-full rounded bg-black/80 p-1 text-white"
+    autofocus
+    onclick={() => dialog.close()}>Close</button
+  >
+</dialog>
+
+<main class="flex h-screen w-[95vw] flex-col items-center">
   <header class="flex h-12 items-end gap-4 px-4 py-1">
     <div class="flex items-baseline gap-1">
       <Breadcrumbs {path} type="file" />
@@ -31,7 +87,7 @@
       >
     </a>
 
-    <div title="file info">
+    <button title="file info" onclick={() => dialog.showModal()}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -45,16 +101,19 @@
           d="M12 8h.01"
         /></svg
       >
-    </div>
+    </button>
+
+    <label class="flex flex-col">
+      <div class="text-sm opacity-50">Renderer</div>
+      <select name="availableRenderers" bind:value={Renderer}>
+        {#each availableRenderers as [name, availableRenderer] (name)}
+          <option value={availableRenderer}>{name}</option>
+        {/each}
+      </select>
+    </label>
   </header>
 
   <div class="w-[80%] flex-1">
-    <object
-      title={file.name}
-      data={raw}
-      type={file.mimeType}
-      class="h-full w-full"
-    >
-    </object>
+    <Renderer {...file} {raw} />
   </div>
 </main>

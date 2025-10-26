@@ -7,6 +7,7 @@
 let
   cfg = config.services.sentouki;
   sentouki-pkg = pkgs.callPackage ./package.nix { };
+  sentouki-register-pkg = pkgs.callPackage ./register.nix { };
 
   # Taken from immich
   commonServiceConfig = {
@@ -65,30 +66,36 @@ in
     database-url = lib.mkOption {
       description = "The path to the database file.";
       type = lib.types.nullOr lib.types.str;
-      default = "/var/lib/sentouki/main.db";
+      default = "file:/var/lib/sentouki/local.db";
     };
 
     node-package = lib.mkPackageOption pkgs "node" { };
   };
 
-  config.systemd.services.sentouki = lib.mkIf cfg.enable {
-    description = "Web-based file browser";
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
+  config = {
+    environment.systemPackages = lib.mkIf cfg.enable [
+      sentouki-register-pkg
+    ];
 
-    serviceConfig = commonServiceConfig // {
-      ExecStart = "${pkgs.nodejs}/bin/node ${sentouki-pkg}/build";
-      StateDirectory = "sentouki";
-      SyslogIdentifier = "sentouki";
-      RuntimeDirectory = "sentouki";
-    };
+    systemd.services.sentouki = lib.mkIf cfg.enable {
+      description = "Web-based file browser";
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
 
-    environment = {
-      "SENTOUKI_ROOT" = cfg.root;
-      "PORT" = "${toString cfg.port}";
-      "HOST" = cfg.host;
-      "ORIGIN" = lib.mkIf (cfg.origin != null) cfg.origin;
-      "DATABASE_URL" = cfg.database-url;
+      serviceConfig = commonServiceConfig // {
+        ExecStart = "${pkgs.nodejs}/bin/node ${sentouki-pkg}/build";
+        StateDirectory = "sentouki";
+        SyslogIdentifier = "sentouki";
+        RuntimeDirectory = "sentouki";
+      };
+
+      environment = {
+        "SENTOUKI_ROOT" = cfg.root;
+        "PORT" = "${toString cfg.port}";
+        "HOST" = cfg.host;
+        "ORIGIN" = lib.mkIf (cfg.origin != null) cfg.origin;
+        "DATABASE_URL" = cfg.database-url;
+      };
     };
   };
 }

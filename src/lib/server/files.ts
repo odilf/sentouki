@@ -17,7 +17,8 @@ export type File = {
   name: string;
   mimeType: string | undefined;
   extension: string | undefined;
-  size?: number;
+  size: number;
+  creation: Date;
   hash?: string;
 };
 
@@ -39,8 +40,9 @@ async function getMimeType(
 }
 
 async function readFile(name: string, fsPath: string): Promise<File> {
-  const [data, mimeResult] = await Promise.all([
+  const [data, stat, mimeResult] = await Promise.all([
     fs.readFile(fsPath),
+    fs.lstat(fsPath),
     getMimeType(fsPath),
   ]);
   const hash = crypto.hash("md5", data);
@@ -50,7 +52,8 @@ async function readFile(name: string, fsPath: string): Promise<File> {
     mimeType: mimeResult?.mime,
     extension: mimeResult?.ext,
     hash,
-    size: data.byteLength,
+    creation: stat.birthtime,
+    size: stat.size,
   };
 }
 
@@ -66,6 +69,7 @@ async function readFileNoData(
     name,
     mimeType,
     extension,
+    creation: stat.birthtime,
     size: stat.size,
   };
 }

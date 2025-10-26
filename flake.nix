@@ -28,7 +28,10 @@
             ];
           };
 
-          packages.default = pkgs.callPackage ./package.nix { };
+          packages = {
+            default = pkgs.callPackage ./package.nix { };
+            register = pkgs.callPackage ./register.nix { };
+          };
         };
 
       flake = {

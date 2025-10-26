@@ -22,7 +22,11 @@
 </script>
 
 {#await data.entry}
-  Loading {data.path}...
+  <div
+    class="grid h-screen w-screen content-center text-center text-xl opacity-50"
+  >
+    Loading {data.path}...
+  </div>
 {:then entry}
   {#if entry.isDirectory}
     <Directory dir={entry} path={data.path} {animate} />
