@@ -4,9 +4,9 @@ import * as paths from "node:path";
 // import { fileTypeFromFile, type FileTypeResult } from "file-type/node";
 import * as crypto from "node:crypto";
 import mime from "mime";
-import { exec } from "node:child_process";
+import { exec, spawn } from "node:child_process";
 
-function root() {
+export function root() {
   if (!env.SENTOUKI_ROOT) {
     throw new Error("Sentouki root is not defined");
   }
@@ -36,7 +36,7 @@ export type FileOrDirectory =
 
 async function getMimeType(fsPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    exec("file --mime-type " + fsPath, (error, stdout, stderr) => {
+    exec(`file --mime-type "${fsPath}"`, (error, stdout, stderr) => {
       if (error) {
         console.error(stderr);
         reject(error);
@@ -142,3 +142,8 @@ async function readFileOrDirectoryApi(path: string): Promise<FileOrDirectory> {
 }
 
 export { readFileOrDirectoryApi as readFileOrDirectory };
+
+export function search(query: string, directory?: string | null) {
+  const cmd = spawn("fd", [query, directory ?? root(), "--follow"]);
+  return cmd;
+}

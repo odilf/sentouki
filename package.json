@@ -59,6 +59,7 @@
     "@sveltejs/adapter-node": "^5.4.0",
     "file-type": "^21.0.0",
     "mime": "^4.1.0",
-    "vite-node": "^3.2.4"
+    "vite-node": "^3.2.4",
+    "zod": "^4.1.12"
   }
 }

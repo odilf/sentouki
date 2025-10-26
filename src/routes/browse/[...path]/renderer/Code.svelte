@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { codeToHtml } from "shiki";
+  import { bundledLanguages, codeToHtml } from "shiki";
 
   let { extension, raw }: { extension: string | undefined; raw: string } =
     $props();
@@ -8,7 +8,9 @@
 
   const html = $derived(
     codeToHtml(await text, {
-      lang: extension ?? "",
+      lang: Object.keys(bundledLanguages).includes(extension ?? "")
+        ? (extension ?? "")
+        : "text",
       theme: "rose-pine",
     })
   );
@@ -16,3 +18,10 @@
 
 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
 {@html html}
+
+<style lang="postcss">
+  @reference "$lib/../app.css";
+  :global(.shiki) {
+    @apply p-2;
+  }
+</style>

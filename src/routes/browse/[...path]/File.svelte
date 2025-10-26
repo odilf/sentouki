@@ -63,13 +63,11 @@
   >
 </dialog>
 
-<main class="flex h-screen w-[95vw] flex-col items-center">
-  <header class="flex h-12 items-end gap-4 px-4 py-1">
-    <div class="flex items-baseline gap-1">
-      <Breadcrumbs {path} type="file" />
-    </div>
-
-    <div class="flex-1"></div>
+<main class="flex h-screen w-screen flex-col items-center">
+  <header
+    class="r scrollbars-none flex h-12 w-screen items-center justify-center gap-4 overflow-x-auto overflow-y-clip px-4 py-1"
+  >
+    <Breadcrumbs {path} type="file" />
 
     <a href={resolve(raw)} download aria-label="download" title="download">
       <svg
@@ -113,7 +111,7 @@
     </label>
   </header>
 
-  <div class="w-[80%] flex-1">
+  <div class="w-full flex-1">
     <Renderer {...file} {raw} />
   </div>
 </main>
