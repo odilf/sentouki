@@ -4,22 +4,22 @@
   import type { File } from "$lib/server/files";
   import Breadcrumbs from "./Breadcrumbs.svelte";
   import Browser from "./renderer/Browser.svelte";
-  import PlainText from "./renderer/PlainText.svelte";
+  import Code from "./renderer/Code.svelte";
 
   let { file, path }: { file: File; path: string } = $props();
   let raw = $derived(`/raw/${path}` as const);
 
   function defaultRenderer(mimeType: string | undefined) {
     if (mimeType?.startsWith("text/")) {
-      return PlainText;
+      return Code;
     } else {
       return Browser;
     }
   }
 
   const availableRenderers = [
-    ["plain text", PlainText],
     ["browser", Browser],
+    ["text & code", Code],
   ] as const;
 
   let properties = $derived([

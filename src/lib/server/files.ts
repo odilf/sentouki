@@ -1,9 +1,10 @@
 import { env } from "$env/dynamic/private";
 import * as fs from "node:fs/promises";
 import * as paths from "node:path";
-import { fileTypeFromFile, type FileTypeResult } from "file-type/node";
+// import { fileTypeFromFile, type FileTypeResult } from "file-type/node";
 import * as crypto from "node:crypto";
 import mime from "mime";
+import { exec } from "node:child_process";
 
 function root() {
   if (!env.SENTOUKI_ROOT) {
@@ -33,14 +34,21 @@ export type FileOrDirectory =
   | ({ isDirectory: true } & Directory)
   | ({ isDirectory: false } & File);
 
-async function getMimeType(
-  fsPath: string
-): Promise<FileTypeResult | undefined> {
-  return await fileTypeFromFile(fsPath);
+async function getMimeType(fsPath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    exec("file --mime-type " + fsPath, (error, stdout, stderr) => {
+      if (error) {
+        console.error(stderr);
+        reject(error);
+      } else {
+        resolve(stdout.slice(fsPath.length + 2));
+      }
+    });
+  });
 }
 
 async function readFile(name: string, fsPath: string): Promise<File> {
-  const [data, stat, mimeResult] = await Promise.all([
+  const [data, stat, mimeType] = await Promise.all([
     fs.readFile(fsPath),
     fs.lstat(fsPath),
     getMimeType(fsPath),
@@ -49,8 +57,8 @@ async function readFile(name: string, fsPath: string): Promise<File> {
 
   return {
     name,
-    mimeType: mimeResult?.mime,
-    extension: mimeResult?.ext,
+    mimeType,
+    extension: paths.extname(name).slice(1),
     hash,
     creation: stat.birthtime,
     size: stat.size,
