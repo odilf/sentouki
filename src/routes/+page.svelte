@@ -16,12 +16,20 @@
       Log in
     </a>
   {:else}
-    <a
-      class="rounded-sm bg-white px-4 py-2 text-2xl text-black"
-      href={resolve("/browse")}
-    >
-      browse
-    </a>
+    <div class="flex w-full gap-1">
+      <a
+        class="flex-1 rounded-sm bg-white px-4 py-2 text-2xl text-black"
+        href={resolve("/browse")}
+      >
+        browse
+      </a>
+      <a
+        class="flex-1 rounded-sm bg-white/40 px-4 py-2 text-2xl text-white"
+        href={resolve("/search")}
+      >
+        search
+      </a>
+    </div>
 
     <a href={resolve("/profile")} class="mt-2"> profile </a>
   {/if}
