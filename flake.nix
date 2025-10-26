@@ -28,11 +28,11 @@
             ];
           };
 
-          packages.default = pkgs.callPackage ./nix/package.nix { };
+          packages.default = pkgs.callPackage ./package.nix { };
         };
 
       flake = {
-        nixosModules.default = import ./nix/module.nix;
+        nixosModules.default = import ./module.nix;
       };
     };
 }
