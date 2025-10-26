@@ -75,9 +75,7 @@ async function readFileNoData(
 }
 
 async function readDirectory(name: string, fsPath: string): Promise<Directory> {
-  console.log("readding dir");
   const entryNames = await fs.readdir(fsPath);
-  console.log("read dir");
   const entries = entryNames.map((name) =>
     readFileOrDirectoryNoData(name, paths.join(fsPath, name))
   );
@@ -111,9 +109,7 @@ async function readFileOrDirectoryNoData(
   name: string,
   fsPath: string
 ): Promise<Omit<FileOrDirectory, "data">> {
-  console.log("statting");
   const stat = await fs.lstat(fsPath);
-  console.log("statted");
   if (stat.isDirectory()) {
     return {
       name,
