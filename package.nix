@@ -4,6 +4,7 @@
   bash,
   stdenv,
   lib,
+  file,
   databaseUrl ? "file:./main.db",
 }:
 stdenv.mkDerivation (finalAttrs: rec {
@@ -11,6 +12,10 @@ stdenv.mkDerivation (finalAttrs: rec {
   version = "0.1.0";
 
   src = lib.cleanSource ./.;
+
+  buildInputs = [
+    file
+  ];
 
   nativeBuildInputs = [
     nodejs

@@ -12,18 +12,21 @@
     animate,
   }: { dir: Directory; path: string; animate: boolean } = $props();
 
-  let selectedIndex = $state(0);
+  let selectedIndex: null | number = $state(null);
   let list: HTMLOListElement;
 
-  $effect(() => {
-    const child = list.children[selectedIndex] as HTMLLIElement;
-    child.focus();
-  });
+  function moveSelection(delta: number) {
+    if (selectedIndex === null) {
+      selectedIndex = 0;
+    } else {
+      selectedIndex =
+        (selectedIndex + delta + list.children.length) % list.children.length;
+    }
+  }
 </script>
 
-{selectedIndex}
 <svelte:window
-  on:keydown={(event) => {
+  on:keydown={async (event) => {
     if (event.key === "k" && event.metaKey) {
       event.preventDefault();
       // eslint-disable-next-line svelte/no-navigation-without-resolve
@@ -31,9 +34,18 @@
     }
 
     if (event.key === "j") {
-      selectedIndex += 1;
+      moveSelection(1);
     } else if (event.key === "k") {
-      selectedIndex -= 1;
+      moveSelection(-1);
+    } else if (event.key === "h") {
+      goto(
+        resolve("/browse/[...path]", {
+          path: path.split("/").slice(0, -1).join("/"),
+        })
+      );
+    } else if (event.key === "l" && selectedIndex !== null) {
+      const entry = await dir.entries[selectedIndex];
+      goto(resolve(`/browse/${path}/${entry.name}`));
     }
   }}
 />
@@ -46,7 +58,7 @@
     <!-- eslint-disable-next-line svelte/require-each-key -->
     {#each dir.entries as entry, i}
       <li
-        class="p-0 focus:bg-white/20"
+        class={["p-0", i === selectedIndex && "bg-white/20"]}
         in:fly|global={{
           x: -20,
           delay: 10 * i,
