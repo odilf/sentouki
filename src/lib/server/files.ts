@@ -36,14 +36,17 @@ export type FileOrDirectory =
 
 async function getMimeType(fsPath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    exec(`file --mime-type "${fsPath}"`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(stderr);
-        reject(error);
-      } else {
-        resolve(stdout.slice(fsPath.length + 2));
+    exec(
+      `${env.SENTOUKI_FILE ?? "file"} --mime-type "${fsPath}"`,
+      (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr);
+          reject(error);
+        } else {
+          resolve(stdout.slice(fsPath.length + 2));
+        }
       }
-    });
+    );
   });
 }
 
@@ -144,6 +147,10 @@ async function readFileOrDirectoryApi(path: string): Promise<FileOrDirectory> {
 export { readFileOrDirectoryApi as readFileOrDirectory };
 
 export function search(query: string, directory?: string | null) {
-  const cmd = spawn("fd", [query, directory ?? root(), "--follow"]);
+  const cmd = spawn(env.SENTOUKI_FD ?? "fd", [
+    query,
+    directory ?? root(),
+    "--follow",
+  ]);
   return cmd;
 }

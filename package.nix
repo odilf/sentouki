@@ -5,6 +5,7 @@
   stdenv,
   lib,
   file,
+  fd,
   databaseUrl ? "file:./main.db",
 }:
 stdenv.mkDerivation (finalAttrs: rec {
@@ -13,8 +14,14 @@ stdenv.mkDerivation (finalAttrs: rec {
 
   src = lib.cleanSource ./.;
 
+  env = {
+    SENTOUKI_FILE = lib.getExe file;
+    SENTOUKI_FD = lib.getExe fd;
+  };
+
   buildInputs = [
     file
+    fd
   ];
 
   nativeBuildInputs = [

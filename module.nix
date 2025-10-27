@@ -95,6 +95,9 @@ in
         "HOST" = cfg.host;
         "ORIGIN" = lib.mkIf (cfg.origin != null) cfg.origin;
         "DATABASE_URL" = cfg.database-url;
+
+        "SENTOUKI_FILE" = lib.getExe pkgs.file;
+        "SENTOUKI_FD" = lib.getExe pkgs.fd;
       };
     };
   };
