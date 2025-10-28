@@ -50,8 +50,27 @@
   }}
 />
 
-<header class="mx-auto flex w-fit items-baseline gap-1 px-4 py-1">
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
+<header class="mx-auto flex w-fit items-center gap-1 px-4 py-1">
   <Breadcrumbs {path} type="dir" />
+
+  <a
+    href="/search?p={path}"
+    aria-label="search at directory"
+    title="search at directory"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="h-8 rounded-sm p-1 transition hover:bg-white/20"
+      ><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg
+    >
+  </a>
 </header>
 <main class="mx-auto flex max-w-xl flex-col px-2 py-4">
   <ol class="flex flex-col" bind:this={list}>
