@@ -1,6 +1,8 @@
 {
   nodejs,
   pnpm_10,
+  fetchPnpmDeps,
+  pnpmConfigHook,
   bash,
   stdenv,
   file,
@@ -14,17 +16,19 @@ stdenv.mkDerivation (finalAttrs: rec {
 
   nativeBuildInputs = [
     nodejs
-    pnpm_10.configHook
+    pnpmConfigHook
+    pnpm_10
   ];
 
   buildInputs = [
     file
   ];
 
-  pnpmDeps = pnpm_10.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
-    hash = "sha256-0JZpcB4J5Mx5IpK+RRRqb1ckXL0eQTcZG9Eli7XZtJ8=";
-    fetcherVersion = 2;
+    pnpm = pnpm_10;
+    hash = "sha256-6CSKAHtXKf5j93vSO9wv/BX+38urvRRtxz8VLD+hFH0=";
+    fetcherVersion = 3;
   };
 
   installPhase = ''
@@ -36,7 +40,7 @@ stdenv.mkDerivation (finalAttrs: rec {
     mkdir -p $out/bin
     echo "\
     #!${bash}/bin/bash
-    TEST=true ./node_modules/vite-node/vite-node.mjs src/cli/register.ts
+    TEST=true $out/node_modules/vite-node/dist/cli.mjs src/cli/register.ts
     " > $out/bin/${pname}
 
     chmod ugo+x $out/bin/${pname}
